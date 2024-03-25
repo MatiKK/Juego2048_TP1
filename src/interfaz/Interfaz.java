@@ -74,7 +74,7 @@ public class Interfaz {
             }
         }
 
-        JButton startButton = new JButton("Iniciar Juego");
+        JButton startButton = new JButton("Iniciar el Juego");
         startButton.setBounds(200, 450, 150, 30);
         startButton.addActionListener(e -> {
             game = new Logica2048(); // Iniciar nuevo juego
