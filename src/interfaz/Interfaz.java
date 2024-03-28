@@ -82,12 +82,6 @@ public class Interfaz {
         });
         frame.getContentPane().add(startButton);
         
-        
-        
-        
-        
-        
-        
 
         // Agregar KeyListener para manejar las pulsaciones de teclas
         frame.addKeyListener(new KeyListener() {
