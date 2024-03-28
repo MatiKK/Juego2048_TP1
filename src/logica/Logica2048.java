@@ -26,10 +26,13 @@ public class Logica2048 {
         addRandomTile();
         gameOver = false;
     }
+    
+    
 
     private void addRandomTile() {
-        // Añade una nueva ficha (2 o 4) en una posición aleatoria vacía del tablero
-        int value = random.nextDouble() < 0.9 ? 2 : 4; // Probabilidad de 90% para 2 y 10% para 4
+        // Añade una nueva ficha (2) en una posición aleatoria vacía del tablero
+        int value = 2; //random.nextDouble() < 0.9 ? 2 : 4; // Probabilidad de 90% para 2 y 10% para 4
+        //int value = random.nextDouble () < 0.9 ? 2 : 4;
         int row, col;
         do {
             row = random.nextInt(tamanio);

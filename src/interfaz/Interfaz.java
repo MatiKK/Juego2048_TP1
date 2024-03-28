@@ -114,6 +114,7 @@ public class Interfaz {
             public void keyReleased(KeyEvent e) {
             }
         });
+        
 
         frame.setFocusable(true); // Permitir que la ventana tenga el foco para recibir eventos de teclado
     }
