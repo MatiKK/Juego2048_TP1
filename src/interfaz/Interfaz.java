@@ -96,8 +96,8 @@ public class Interfaz {
             }
         }
 
-        JButton startButton = new JButton("Iniciar el Juego");
-        startButton.setBounds(10, 447, 150, 30);
+        JButton startButton = new JButton("Reiniciar game");
+        startButton.setBounds(144, 458, 150, 30);
         startButton.addActionListener(e -> {
             game = new Logica2048(); // Iniciar nuevo juego
             actualizarTablero();
@@ -105,7 +105,9 @@ public class Interfaz {
         frame.getContentPane().add(startButton);
         
         JLabel mensajeEnPantalla = new JLabel("PARTIDA EN CURSO");
-        mensajeEnPantalla.setBounds(10, 422, 306, 14);
+        mensajeEnPantalla.setFont(new Font("Tahoma", Font.PLAIN, 20));
+        mensajeEnPantalla.setHorizontalAlignment(SwingConstants.CENTER);
+        mensajeEnPantalla.setBounds(10, 421, 400, 26);
         frame.getContentPane().add(mensajeEnPantalla);
         
         
@@ -140,7 +142,11 @@ public class Interfaz {
                 
                 if (partidaFinalizada == true) {
                 	//gameOver();
-                	mensajeEnPantalla.setText("¡Juego terminado! Gracias por jugar!!");
+                	
+                	mensajeEnPantalla.setText("Perdiste :( ¡Juego terminado! Gracias por jugar!!");
+                	
+                	
+                	
                 }
             }
 
