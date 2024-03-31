@@ -18,6 +18,7 @@ public class Interfaz {
     private Timer temporizador;
     private int posicionActualX, posicionObjetivoX;
     private final int duracionAnimacion = 500; // Duración de la animación en milisegundos
+    private boolean partidaFinalizada;
 
 
     public static void main(String[] args) {
@@ -31,10 +32,31 @@ public class Interfaz {
         });
     }
 
+    /**
+     * @wbp.parser.entryPoint
+     */
     public Interfaz() {
+    	
         game = new Logica2048();
         initialize();
         actualizarTablero(); // Actualizar tablero al iniciar la interfaz
+        validarSiPartidaFinalizada();
+
+        
+        
+        /*if (game.tableroLleno()) {
+        	System.out.println("WARNING: TABLERO LLENO");
+        	game.combinacionesPosibles();
+        	if (game.validarPartidaPerdida()) {
+        		System.out.println("XXXXXXXXXXX-------------JUEGO TERMINADO: PERDISTE---------XXXXXXXXXXXXX");
+        	}else {
+        		System.out.println("*********Todavia hay movimientos**********");
+        	}
+            // Realizar acciones cuando el tablero está lleno
+            // Por ejemplo, mostrar un mensaje de fin de juego
+        }
+        */
+        
     }
 
     private void initialize() {
@@ -75,12 +97,17 @@ public class Interfaz {
         }
 
         JButton startButton = new JButton("Iniciar el Juego");
-        startButton.setBounds(200, 450, 150, 30);
+        startButton.setBounds(10, 447, 150, 30);
         startButton.addActionListener(e -> {
             game = new Logica2048(); // Iniciar nuevo juego
             actualizarTablero();
         });
         frame.getContentPane().add(startButton);
+        
+        JLabel mensajeEnPantalla = new JLabel("PARTIDA EN CURSO");
+        mensajeEnPantalla.setBounds(10, 422, 306, 14);
+        frame.getContentPane().add(mensajeEnPantalla);
+        
         
 
         // Agregar KeyListener para manejar las pulsaciones de teclas
@@ -108,6 +135,13 @@ public class Interfaz {
                         break;
                 }
                 actualizarTablero(); // Actualizar tablero después de mover
+                validarSiPartidaFinalizada();//valido si la partida finalizo
+                System.out.println("El valor de la variable partidaFinalizada es:" + partidaFinalizada);
+                
+                if (partidaFinalizada == true) {
+                	//gameOver();
+                	mensajeEnPantalla.setText("¡Juego terminado! Gracias por jugar!!");
+                }
             }
 
             @Override
@@ -117,6 +151,7 @@ public class Interfaz {
         
 
         frame.setFocusable(true); // Permitir que la ventana tenga el foco para recibir eventos de teclado
+        
     }
 
     private void actualizarTablero() {
@@ -126,5 +161,15 @@ public class Interfaz {
                 grafo[i][j].setText(tablero[i][j] == 0 ? "" : String.valueOf(tablero[i][j]));
             }
         }
+    }
+    
+    
+    public void validarSiPartidaFinalizada() {
+        // Mostrar mensaje de fin de juego
+    	partidaFinalizada =  game.getPerdioPartida();
+        //"¡Juego terminado! Gracias por jugar.");
+
+        // Cerrar la aplicación
+        //System.exit(0);
     }
 }

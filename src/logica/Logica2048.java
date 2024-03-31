@@ -8,6 +8,9 @@ public class Logica2048 {
     private boolean gameOver; // Indica si el juego ha terminado
     private Random random; // Generador de números aleatorios
     private boolean enMovimiento;
+    private boolean tableroLleno;//flag para validar si el tablero esta lleno
+    
+    private boolean perdioPartida; //inicializa en false por defecto
 
     // Enumeración para las direcciones posibles de movimiento
     public enum Direccion {
@@ -18,27 +21,85 @@ public class Logica2048 {
     }
     
     
-
     public Logica2048() {
         tablero = new int[tamanio][tamanio];
         random = new Random();
-        addRandomTile();
-        addRandomTile();
+        agregarFichaRandom();
+        agregarFichaRandom();
         gameOver = false;
+        tableroLleno = false;
+    }
+    
+    private boolean chequearSiExistenPosiblesMovimientos() {
+    	//solo deberia validar esto cuando el tablero este lleno.
+
+    	return false;
+    }
+    
+    public boolean getPerdioPartida(){
+    	return perdioPartida;
+    }
+    
+    public void validarPartidaPerdida() {//valido si la partida esta perdida
+    	if (tableroLleno()) {
+    		if (combinacionesPosibles()) {
+    			System.out.println("################-------no quedan combinaciones posibles-----------");
+    			perdioPartida = true;
+    			System.out.println("Se actualizo variable perdioPartida: " + perdioPartida);
+    		}else {
+    			System.out.println("XXXXXXXXXXXXX---- valide y la partida continua HAY COMBINACIONES-----");
+    			perdioPartida = false;
+    		}
+    	}else {
+        	System.out.println("XXXXXXXXXXXXX----valide y la partida continua TABLERO CON LUGAR-----");
+    		perdioPartida = false;
+    	}
+
+    }
+    
+    
+    public boolean combinacionesPosibles() {
+        // Chequeo todo el tablero
+        for (int i = 0; i < tamanio; i++) {
+            for (int j = 0; j < tamanio - 1; j++) {
+                if (tablero[i][j] == tablero[i][j + 1] || tablero[j][i] == tablero[j + 1][i]) {
+                    return false; // Hay al menos una combinación posible
+                }
+            }
+        }
+        return true; // No hay combinaciones posibles
+    }
+    
+    public boolean tableroLleno() {
+        for (int i = 0; i < tamanio; i++) {
+            for (int j = 0; j < tamanio; j++) {
+                if (tablero[i][j] == 0) {
+                	tableroLleno = false;
+                    return false; // El tablero tiene espacios vacios
+                }
+            }
+        }
+        tableroLleno = true;
+        return true; // El tablero está lleno
     }
     
     
 
-    private void addRandomTile() {
-        // Añade una nueva ficha (2) en una posición aleatoria vacía del tablero
-        int value = 2; //random.nextDouble() < 0.9 ? 2 : 4; // Probabilidad de 90% para 2 y 10% para 4
-        //int value = random.nextDouble () < 0.9 ? 2 : 4;
-        int row, col;
-        do {
-            row = random.nextInt(tamanio);
-            col = random.nextInt(tamanio);
-        } while (tablero[row][col] != 0); // Busca una posición vacía
-        tablero[row][col] = value;
+    private void agregarFichaRandom() {
+    	if (!tableroLleno) {
+    		// Añade una nueva ficha (2) en una posición aleatoria vacía del tablero
+            //int value = 2; //random.nextDouble() < 0.9 ? 2 : 4; // Probabilidad de 90% para 2 y 10% para 4
+            int value = random.nextDouble () < 0.9 ? 2 : 4;
+            int row, col;
+            do {
+                row = random.nextInt(tamanio);
+                col = random.nextInt(tamanio);
+            } while (tablero[row][col] != 0); // Busca una posición vacía
+            tablero[row][col] = value;
+    	}else {
+    		System.out.println("El tablero esta lleno no puedo agregar mas fichas");
+    	}
+        
     }
 
     public boolean getMove() {
@@ -53,21 +114,25 @@ public class Logica2048 {
         switch (direccion) {
             case UP:
             	enMovimiento = moveUp();
+            	validarPartidaPerdida();
                 break;
             case DOWN:
             	enMovimiento = moveDown();
+            	validarPartidaPerdida();
                 break;
             case LEFT:
             	enMovimiento = moveLeft();
+            	validarPartidaPerdida();
                 break;
             case RIGHT:
             	enMovimiento = moveRight();
+            	validarPartidaPerdida();
                 break;
         }
 
         // Si se realizó algún movimiento, añadir una nueva ficha y verificar el estado del juego
         if (enMovimiento) {
-            addRandomTile(); // Añadir una nueva ficha aleatoria al final del movimiento
+            agregarFichaRandom(); // Añadir una nueva ficha aleatoria al final del movimiento
             //gameOver = checkGameOver(); // Verificar si el juego ha terminado después del movimiento
         }
         
