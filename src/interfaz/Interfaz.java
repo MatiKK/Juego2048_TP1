@@ -151,8 +151,10 @@ public class Interfaz {
                 
                 if (partidaFinalizada == true) {
                 	mensajeEnPantalla.setText("Perdiste :( ¡Juego terminado! Gracias por jugar!!");
+                	mensajeEnPantalla.setForeground(Color.red);
                 }else if (partidaGanada == true) {
                 	mensajeEnPantalla.setText("Ganaste :D ¡Juego terminado! Gracias por jugar!!");
+                	mensajeEnPantalla.setForeground(Color.GREEN);
                 }else {
                 	//
                 }
