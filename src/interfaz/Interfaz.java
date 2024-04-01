@@ -112,6 +112,13 @@ public class Interfaz {
         mensajeEnPantalla.setBounds(10, 421, 400, 26);
         frame.getContentPane().add(mensajeEnPantalla);
         
+        JButton exitButton = new JButton("Salir del juego");
+        exitButton.setBounds(144, 499, 150, 30);
+        exitButton.addActionListener(e -> {
+        	System.exit(0);//salgo del juego
+        });
+        frame.getContentPane().add(exitButton);
+        
         
 
         // Agregar KeyListener para manejar las pulsaciones de teclas
