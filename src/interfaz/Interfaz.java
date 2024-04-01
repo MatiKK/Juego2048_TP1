@@ -19,6 +19,7 @@ public class Interfaz {
     private int posicionActualX, posicionObjetivoX;
     private final int duracionAnimacion = 500; // Duración de la animación en milisegundos
     private boolean partidaFinalizada;
+    private boolean partidaGanada;
 
 
     public static void main(String[] args) {
@@ -105,7 +106,7 @@ public class Interfaz {
         frame.getContentPane().add(startButton);
         
         JLabel mensajeEnPantalla = new JLabel("PARTIDA EN CURSO");
-        mensajeEnPantalla.setFont(new Font("Tahoma", Font.PLAIN, 20));
+        mensajeEnPantalla.setFont(new Font("Tahoma", Font.PLAIN, 18));
         mensajeEnPantalla.setHorizontalAlignment(SwingConstants.CENTER);
         mensajeEnPantalla.setBounds(10, 421, 400, 26);
         frame.getContentPane().add(mensajeEnPantalla);
@@ -141,12 +142,11 @@ public class Interfaz {
                 System.out.println("El valor de la variable partidaFinalizada es:" + partidaFinalizada);
                 
                 if (partidaFinalizada == true) {
-                	//gameOver();
-                	
                 	mensajeEnPantalla.setText("Perdiste :( ¡Juego terminado! Gracias por jugar!!");
-                	
-                	
-                	
+                }else if (partidaGanada == true) {
+                	mensajeEnPantalla.setText("Ganaste :D ¡Juego terminado! Gracias por jugar!!");
+                }else {
+                	//
                 }
             }
 
@@ -171,7 +171,7 @@ public class Interfaz {
     
     
     public void validarSiPartidaFinalizada() {
-        // Mostrar mensaje de fin de juego
+        partidaGanada = game.getGanoPartida();
     	partidaFinalizada =  game.getPerdioPartida();
         //"¡Juego terminado! Gracias por jugar.");
 

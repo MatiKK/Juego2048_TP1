@@ -11,6 +11,7 @@ public class Logica2048 {
     private boolean tableroLleno;//flag para validar si el tablero esta lleno
     
     private boolean perdioPartida; //inicializa en false por defecto
+    private boolean ganoPartida; //inicializa en false por defecto
 
     // Enumeración para las direcciones posibles de movimiento
     public enum Direccion {
@@ -30,10 +31,8 @@ public class Logica2048 {
         tableroLleno = false;
     }
     
-    private boolean chequearSiExistenPosiblesMovimientos() {
-    	//solo deberia validar esto cuando el tablero este lleno.
-
-    	return false;
+    public boolean getGanoPartida() {
+    	return ganoPartida;
     }
     
     public boolean getPerdioPartida(){
@@ -84,6 +83,20 @@ public class Logica2048 {
     }
     
     
+    public boolean busquedaPiezaGanadora() {
+        for (int i = 0; i < tamanio; i++) {
+            for (int j = 0; j < tamanio; j++) {
+                if (tablero[i][j] == 64) {
+                	ganoPartida = true;
+                    return true; // gano partida
+                }
+            }
+        }
+        ganoPartida = false;
+        return false; // sigue sin ganar
+    }
+    
+    
 
     private void agregarFichaRandom() {
     	if (!tableroLleno) {
@@ -114,18 +127,22 @@ public class Logica2048 {
         switch (direccion) {
             case UP:
             	enMovimiento = moveUp();
+            	busquedaPiezaGanadora();
             	validarPartidaPerdida();
                 break;
             case DOWN:
             	enMovimiento = moveDown();
+            	busquedaPiezaGanadora();
             	validarPartidaPerdida();
                 break;
             case LEFT:
             	enMovimiento = moveLeft();
+            	busquedaPiezaGanadora();
             	validarPartidaPerdida();
                 break;
             case RIGHT:
             	enMovimiento = moveRight();
+            	busquedaPiezaGanadora();
             	validarPartidaPerdida();
                 break;
         }
