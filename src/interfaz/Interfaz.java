@@ -21,6 +21,9 @@ public class Interfaz {
     */
     private boolean partidaFinalizada;
     private boolean partidaGanada;
+    
+    //private JButton cargarDatosButton;
+    //cargarDatosButton = new JButton("Cargar Datos");
 
 
     public static void main(String[] args) {
@@ -43,6 +46,8 @@ public class Interfaz {
         initialize();
         actualizarTablero(); // Actualizar tablero al iniciar la interfaz
         validarSiPartidaFinalizada();
+        
+        
 
         
         
@@ -103,6 +108,9 @@ public class Interfaz {
         startButton.addActionListener(e -> {
             game = new Logica2048(); // Iniciar nuevo juego
             actualizarTablero();
+            grafo = new JLabel[4][4];
+            frame.requestFocus();//SIGUE SIN FUNCIONAR VALIDAR!!
+        	
         });
         frame.getContentPane().add(startButton);
         
@@ -118,6 +126,21 @@ public class Interfaz {
         	System.exit(0);//salgo del juego
         });
         frame.getContentPane().add(exitButton);
+        
+        JButton btnElegirDificultad = new JButton("Elegir dificultad");
+        btnElegirDificultad.setBounds(10, 458, 124, 30);
+        btnElegirDificultad.addActionListener(e -> {
+        	String input = JOptionPane.showInputDialog(frame, "Ingrese el numero que se deberá alcanzar.");
+        	
+        	int numero = Integer.parseInt(input);
+        	
+        	game.updateValorGanador(numero);
+        	frame.requestFocus();// soluciono problema con botones ya que sin esto no me reconoce las teclas y no puedo continuar //comentario para informe
+        	
+        });
+        frame.getContentPane().add(btnElegirDificultad);
+        
+        
         
         
 
@@ -154,7 +177,7 @@ public class Interfaz {
                 	mensajeEnPantalla.setForeground(Color.red);
                 }else if (partidaGanada == true) {
                 	mensajeEnPantalla.setText("Ganaste :D ¡Juego terminado! Gracias por jugar!!");
-                	mensajeEnPantalla.setForeground(Color.GREEN);
+                	mensajeEnPantalla.setForeground(Color.GREEN.darker());
                 }else {
                 	mensajeEnPantalla.setText("Partida en curso");
                 }

@@ -34,6 +34,10 @@ public class Logica2048 {
         valorGanador = 64;
     }
     
+    public void updateValorGanador(int valor) {
+    	valorGanador = valor;
+    }
+    
     public boolean getGanoPartida() {
     	return ganoPartida;
     }
