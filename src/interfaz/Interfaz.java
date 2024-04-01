@@ -106,7 +106,7 @@ public class Interfaz {
         });
         frame.getContentPane().add(startButton);
         
-        JLabel mensajeEnPantalla = new JLabel("PARTIDA EN CURSO");
+        JLabel mensajeEnPantalla = new JLabel("Mueva una tecla para iniciar la partida");
         mensajeEnPantalla.setFont(new Font("Tahoma", Font.PLAIN, 18));
         mensajeEnPantalla.setHorizontalAlignment(SwingConstants.CENTER);
         mensajeEnPantalla.setBounds(10, 421, 400, 26);
@@ -156,7 +156,7 @@ public class Interfaz {
                 	mensajeEnPantalla.setText("Ganaste :D ¡Juego terminado! Gracias por jugar!!");
                 	mensajeEnPantalla.setForeground(Color.GREEN);
                 }else {
-                	//
+                	mensajeEnPantalla.setText("Partida en curso");
                 }
             }
 
