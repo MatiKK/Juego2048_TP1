@@ -12,6 +12,8 @@ public class Logica2048 {
     
     private boolean perdioPartida; //inicializa en false por defecto
     private boolean ganoPartida; //inicializa en false por defecto
+    private int valorGanador;
+    
 
     // Enumeración para las direcciones posibles de movimiento
     public enum Direccion {
@@ -29,6 +31,7 @@ public class Logica2048 {
         agregarFichaRandom();
         gameOver = false;
         tableroLleno = false;
+        valorGanador = 64;
     }
     
     public boolean getGanoPartida() {
@@ -86,7 +89,7 @@ public class Logica2048 {
     public boolean busquedaPiezaGanadora() {
         for (int i = 0; i < tamanio; i++) {
             for (int j = 0; j < tamanio; j++) {
-                if (tablero[i][j] == 64) {
+                if (tablero[i][j] == valorGanador) {
                 	ganoPartida = true;
                     return true; // gano partida
                 }
