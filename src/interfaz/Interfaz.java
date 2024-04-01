@@ -6,7 +6,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import logica.Logica2048;
 
-import javax.swing.Timer; // Importar Timer de javax.swing
+//import javax.swing.Timer; // Importar Timer de javax.swing
 
 
 
@@ -14,10 +14,11 @@ public class Interfaz {
     private JFrame frame;
     private JLabel[][] grafo;
     private Logica2048 game;
-    
+    /*ver si los puedo usar despues para animacion mas suave
     private Timer temporizador;
     private int posicionActualX, posicionObjetivoX;
     private final int duracionAnimacion = 500; // Duración de la animación en milisegundos
+    */
     private boolean partidaFinalizada;
     private boolean partidaGanada;
 
