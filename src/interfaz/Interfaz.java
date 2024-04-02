@@ -214,13 +214,40 @@ public class Interfaz {
 
     private void actualizarTablero() {
         int[][] tablero = game.obtenerTablero();
+        boolean recomendacionHecha = false; 
         for (int i = 0; i < grafo.length; i++) {
             for (int j = 0; j < grafo[i].length; j++) {
                 grafo[i][j].setText(tablero[i][j] == 0 ? "" : String.valueOf(tablero[i][j]));
+                grafo[i][j].setBackground(Color.WHITE); 
+            }
+        }      
+        for (int i = 0; i < grafo.length; i++) {
+            for (int j = 0; j < grafo[i].length; j++) {
+                if (!recomendacionHecha && tablero[i][j] != 0) {
+                    if ((i > 0 && tablero[i - 1][j] == tablero[i][j]) || 
+                        (i < grafo.length - 1 && tablero[i + 1][j] == tablero[i][j]) || 
+                        (j > 0 && tablero[i][j - 1] == tablero[i][j]) || 
+                        (j < grafo[i].length - 1 && tablero[i][j + 1] == tablero[i][j])) { 
+                        grafo[i][j].setBackground(Color.RED);
+                        if (i > 0 && tablero[i - 1][j] == tablero[i][j]) {
+                            grafo[i - 1][j].setBackground(Color.RED);
+                        }
+                        if (i < grafo.length - 1 && tablero[i + 1][j] == tablero[i][j]) {
+                            grafo[i + 1][j].setBackground(Color.RED);
+                        }
+                        if (j > 0 && tablero[i][j - 1] == tablero[i][j]) {
+                            grafo[i][j - 1].setBackground(Color.RED);
+                        }
+                        if (j < grafo[i].length - 1 && tablero[i][j + 1] == tablero[i][j]) {
+                            grafo[i][j + 1].setBackground(Color.RED);
+                        }
+                        recomendacionHecha = true; 
+                    }
+                }
             }
         }
     }
-    
+ 
     
     public void validarSiPartidaFinalizada() {
         partidaGanada = game.getGanoPartida();

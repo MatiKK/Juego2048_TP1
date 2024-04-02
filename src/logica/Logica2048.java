@@ -15,6 +15,8 @@ public class Logica2048 {
     private int valorGanador;
     
 
+    
+
     // Enumeración para las direcciones posibles de movimiento
     public enum Direccion {
         UP,
@@ -50,6 +52,7 @@ public class Logica2048 {
     	return perdioPartida;
     }
     
+    
     public void validarPartidaPerdida() {//valido si la partida esta perdida
     	if (tableroLleno()) {
     		if (combinacionesPosibles()) {
@@ -79,6 +82,9 @@ public class Logica2048 {
         }
         return true; // No hay combinaciones posibles
     }
+    
+
+
     
     public boolean tableroLleno() {
         for (int i = 0; i < tamanio; i++) {
