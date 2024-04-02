@@ -127,6 +127,22 @@ public class Interfaz {
         });
         frame.getContentPane().add(exitButton);
         
+
+        
+        JLabel mensajeEnPantalla_1 = new JLabel("Alcanzar Nro:");
+        mensajeEnPantalla_1.setHorizontalAlignment(SwingConstants.CENTER);
+        mensajeEnPantalla_1.setFont(new Font("Tahoma", Font.PLAIN, 12));
+        mensajeEnPantalla_1.setBounds(10, 499, 87, 26);
+        frame.getContentPane().add(mensajeEnPantalla_1);
+        
+        JLabel mensajeEnPantalla_Num = new JLabel(String.valueOf(game.getValorGanador()));
+        mensajeEnPantalla_Num.setHorizontalAlignment(SwingConstants.CENTER);
+        mensajeEnPantalla_Num.setFont(new Font("Tahoma", Font.PLAIN, 12));
+        mensajeEnPantalla_Num.setBounds(92, 499, 42, 26);
+        frame.getContentPane().add(mensajeEnPantalla_Num);
+        
+        
+        
         JButton btnElegirDificultad = new JButton("Elegir dificultad");
         btnElegirDificultad.setBounds(10, 458, 124, 30);
         btnElegirDificultad.addActionListener(e -> {
@@ -135,10 +151,13 @@ public class Interfaz {
         	int numero = Integer.parseInt(input);
         	
         	game.updateValorGanador(numero);
+        	mensajeEnPantalla_Num.setText(String.valueOf(game.getValorGanador()));
+        	
         	frame.requestFocus();// soluciono problema con botones ya que sin esto no me reconoce las teclas y no puedo continuar //comentario para informe
         	
         });
         frame.getContentPane().add(btnElegirDificultad);
+        
         
         
         
