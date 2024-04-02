@@ -158,6 +158,15 @@ public class Interfaz {
         });
         frame.getContentPane().add(btnElegirDificultad);
         
+        JButton btnSugerirJugada = new JButton("Sugerir jugada");
+        btnSugerirJugada.setBounds(304, 458, 150, 30);
+        btnSugerirJugada.addActionListener(e -> {
+        	//System.exit(0);//salgo del juego
+        	recomendarJugada(game.obtenerTablero());
+        	frame.requestFocus();
+        });
+        frame.getContentPane().add(btnSugerirJugada);
+        
         
         
         
@@ -221,7 +230,7 @@ public class Interfaz {
                 grafo[i][j].setBackground(Color.WHITE); 
             }
         }
-        recomendarJugada(tablero);
+        //recomendarJugada(tablero);
     }
 
 	private void recomendarJugada(int[][] tablero) {
