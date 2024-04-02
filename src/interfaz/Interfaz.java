@@ -214,13 +214,18 @@ public class Interfaz {
 
     private void actualizarTablero() {
         int[][] tablero = game.obtenerTablero();
-        boolean recomendacionHecha = false; 
+        //boolean recomendacionHecha = false; 
         for (int i = 0; i < grafo.length; i++) {
             for (int j = 0; j < grafo[i].length; j++) {
                 grafo[i][j].setText(tablero[i][j] == 0 ? "" : String.valueOf(tablero[i][j]));
                 grafo[i][j].setBackground(Color.WHITE); 
             }
-        }      
+        }
+        recomendarJugada(tablero);
+    }
+
+	private void recomendarJugada(int[][] tablero) {
+		boolean recomendacionHecha = false; 
         for (int i = 0; i < grafo.length; i++) {
             for (int j = 0; j < grafo[i].length; j++) {
                 if (!recomendacionHecha && tablero[i][j] != 0) {
@@ -246,7 +251,7 @@ public class Interfaz {
                 }
             }
         }
-    }
+	}
  
     
     public void validarSiPartidaFinalizada() {
