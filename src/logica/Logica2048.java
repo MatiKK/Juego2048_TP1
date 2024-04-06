@@ -194,7 +194,6 @@ public class Logica2048 {
     }
     
     private int moveUp() {
-        enMovimiento = false;
         int puntaje = 0;
         // Recorrer cada columna del tablero
         for (int col = 0; col < tamanio; col++) {
@@ -236,7 +235,6 @@ public class Logica2048 {
     }
 
     private int moveDown() {
-    	enMovimiento = false;
     	int puntaje = 0;
         // Recorrer cada columna del tablero
         for (int col = 0; col < tamanio; col++) {
@@ -276,7 +274,6 @@ public class Logica2048 {
     }
 
     private int moveLeft() {
-        boolean enMovimiento = false;
         int puntaje = 0;
         // Recorrer cada fila del tablero
         for (int row = 0; row < tamanio; row++) {
@@ -316,7 +313,6 @@ public class Logica2048 {
     }
 
     private int moveRight() {
-        boolean enMovimiento = false;
         int puntaje = 0;
         // Recorrer cada fila del tablero
         for (int row = 0; row < tamanio; row++) {
