@@ -23,7 +23,8 @@ public class Interfaz {
     */
     private boolean partidaFinalizada;
     private boolean partidaGanada;
-    
+    private int puntaje;
+
     //private JButton cargarDatosButton;
     //cargarDatosButton = new JButton("Cargar Datos");
 
@@ -45,6 +46,7 @@ public class Interfaz {
     public Interfaz() {
     	
         game = new Logica2048();
+        puntaje = 0;
         initialize();
         actualizarTablero(); // Actualizar tablero al iniciar la interfaz
         validarSiPartidaFinalizada();
@@ -114,7 +116,7 @@ public class Interfaz {
         frame.getContentPane().add(mensajeEnPantalla);
         
         JButton startButton = new JButton("Reiniciar juego");
-        startButton.setBounds(144, 458, 150, 30);
+        startButton.setBounds(304, 458, 150, 30);
         startButton.addActionListener(e -> {
             game.resetGame(); 
             actualizarTablero(); 
@@ -127,13 +129,14 @@ public class Interfaz {
         frame.getContentPane().add(startButton);
         
         JButton exitButton = new JButton("Salir del juego");
-        exitButton.setBounds(144, 499, 150, 30);
+        exitButton.setBounds(304, 498, 150, 30);
         exitButton.addActionListener(e -> {
         	System.exit(0);//salgo del juego
         });
         frame.getContentPane().add(exitButton);
         
 
+        
         
         JLabel mensajeEnPantalla_1 = new JLabel("Alcanzar Nro:");
         mensajeEnPantalla_1.setHorizontalAlignment(SwingConstants.CENTER);
@@ -150,7 +153,7 @@ public class Interfaz {
         
         
         JButton btnElegirDificultad = new JButton("Elegir dificultad");
-        btnElegirDificultad.setBounds(10, 458, 124, 30);
+        btnElegirDificultad.setBounds(170, 498, 124, 30);
         btnElegirDificultad.addActionListener(e -> {
         	String input = JOptionPane.showInputDialog(frame, "Ingrese el numero que se deberá alcanzar.");
         	
@@ -165,16 +168,25 @@ public class Interfaz {
         frame.getContentPane().add(btnElegirDificultad);
         
         JButton btnSugerirJugada = new JButton("Sugerir jugada");
-        btnSugerirJugada.setBounds(304, 458, 150, 30);
+        btnSugerirJugada.setBounds(170, 458, 124, 30);
         btnSugerirJugada.addActionListener(e -> {
         	//System.exit(0);//salgo del juego
         	recomendarJugada(game.obtenerTablero());
         	frame.requestFocus();
         });
         frame.getContentPane().add(btnSugerirJugada);
+
+
+        // Puntaje
+        JLabel puntajePantallaTexto = new JLabel("Puntaje: ");
+        puntajePantallaTexto.setFont(new Font("Tahoma", Font.PLAIN, 12));
+        puntajePantallaTexto.setBounds(20, 458, 50, 14);
+        frame.getContentPane().add(puntajePantallaTexto);
         
-        
-        
+        JLabel puntajePantalla = new JLabel(String.valueOf(puntaje));
+        puntajePantalla.setFont(new Font("Tahoma", Font.PLAIN, 12));
+        puntajePantalla.setBounds(88, 458, 46, 14);
+        frame.getContentPane().add(puntajePantalla);
         
         
 
@@ -189,22 +201,38 @@ public class Interfaz {
             public void keyPressed(KeyEvent e) {
                 if (!partidaFinalizada) { // Solo permitir movimientos si la partida no ha finalizado
                     int key = e.getKeyCode();
+                    int puntajeGanado = 0;
+
+                    /*
+                     * Se podría hacer directamente puntaje += game.move(...)
+                     * y abajo del switch directamente puntajePantalla.setText(puntaje)
+                     * pero yo para que no lo haga siempre,
+                     * capaz apretas cualquier tecla y lo actualiza igual
+                     * fijense, igual termina siendo lo mismo
+                     */
+
                     switch (key) {
                         case KeyEvent.VK_UP:
-                            game.move(Logica2048.Direccion.UP);
+                        	puntajeGanado = game.move(Logica2048.Direccion.UP);
                             break;
                         case KeyEvent.VK_DOWN:
-                            game.move(Logica2048.Direccion.DOWN);
+                        	puntajeGanado = game.move(Logica2048.Direccion.DOWN);
                             break;
                         case KeyEvent.VK_LEFT:
-                            game.move(Logica2048.Direccion.LEFT);
+                        	puntajeGanado = game.move(Logica2048.Direccion.LEFT);
                             break;
                         case KeyEvent.VK_RIGHT:
-                            game.move(Logica2048.Direccion.RIGHT);
+                        	puntajeGanado = game.move(Logica2048.Direccion.RIGHT);
                             break;
                     }
+
                     actualizarTablero(); // Actualizar tablero después de mover
                     validarSiPartidaFinalizada(); // Validar si la partida ha finalizado
+
+                    if (puntajeGanado > 0) {
+                    	puntaje += puntajeGanado;
+                    	puntajePantalla.setText(String.valueOf(puntaje));
+                    }
 
                     // Verificar si el jugador ha ganado después del movimiento
                     if (partidaGanada) {

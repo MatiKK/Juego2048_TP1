@@ -151,29 +151,29 @@ public class Logica2048 {
     	return enMovimiento;
     }
     
-    public void move(Direccion direccion) {
+    public int move(Direccion direccion) {
         // Variable para verificar si se realizó algún movimiento
     	enMovimiento = false;
-
+    	int puntaje = 0;
         // Aplicar lógica de movimiento según la dirección especificada
         switch (direccion) {
             case UP:
-            	enMovimiento = moveUp();
+            	puntaje = moveUp();
             	busquedaPiezaGanadora();
             	validarPartidaPerdida();
                 break;
             case DOWN:
-            	enMovimiento = moveDown();
+            	puntaje = moveDown();
             	busquedaPiezaGanadora();
             	validarPartidaPerdida();
                 break;
             case LEFT:
-            	enMovimiento = moveLeft();
+            	puntaje = moveLeft();
             	busquedaPiezaGanadora();
             	validarPartidaPerdida();
                 break;
             case RIGHT:
-            	enMovimiento = moveRight();
+            	puntaje = moveRight();
             	busquedaPiezaGanadora();
             	validarPartidaPerdida();
                 break;
@@ -189,17 +189,13 @@ public class Logica2048 {
                 ganoPartida = true;
             }
         }
-        
-        
-        
-        
-        
-        
+
+        return puntaje;
     }
     
-    private boolean moveUp() {
+    private int moveUp() {
         enMovimiento = false;
-
+        int puntaje = 0;
         // Recorrer cada columna del tablero
         for (int col = 0; col < tamanio; col++) {
             // Combinar y mover las fichas hacia arriba en la columna actual
@@ -224,6 +220,7 @@ public class Logica2048 {
                             tablero[k][col] *= 2;
                             tablero[k + 1][col] = 0;
                             enMovimiento = true;
+                            puntaje += tablero[k][col];
                             System.out.println("obteniendo valor: " + tablero[k][col]);
                             break;
                         } else {
@@ -235,12 +232,12 @@ public class Logica2048 {
             }
         }
 
-        return enMovimiento;
+        return puntaje;
     }
 
-    private boolean moveDown() {
+    private int moveDown() {
     	enMovimiento = false;
-
+    	int puntaje = 0;
         // Recorrer cada columna del tablero
         for (int col = 0; col < tamanio; col++) {
             // Combinar y mover las fichas hacia abajo en la columna actual
@@ -263,6 +260,7 @@ public class Logica2048 {
                             tablero[k][col] *= 2;
                             tablero[k - 1][col] = 0;
                             enMovimiento = true;
+                            puntaje += tablero[k][col];
                             System.out.println("obteniendo valor: " + tablero[k][col]);
                             break;
                         } else {
@@ -274,12 +272,12 @@ public class Logica2048 {
             }
         }
 
-        return enMovimiento;
+        return puntaje;
     }
 
-    private boolean moveLeft() {
+    private int moveLeft() {
         boolean enMovimiento = false;
-
+        int puntaje = 0;
         // Recorrer cada fila del tablero
         for (int row = 0; row < tamanio; row++) {
             // Combinar y mover las fichas hacia la izquierda en la fila actual
@@ -302,6 +300,7 @@ public class Logica2048 {
                         	tablero[row][k] *= 2;
                             tablero[row][k + 1] = 0;
                             enMovimiento = true;
+                            puntaje += tablero[row][k];
                             System.out.println("obteniendo valor: " + tablero[row][k]);                            
                             break;
                         } else {
@@ -313,12 +312,12 @@ public class Logica2048 {
             }
         }
 
-        return enMovimiento;
+        return puntaje;
     }
 
-    private boolean moveRight() {
+    private int moveRight() {
         boolean enMovimiento = false;
-
+        int puntaje = 0;
         // Recorrer cada fila del tablero
         for (int row = 0; row < tamanio; row++) {
             // Combinar y mover las fichas hacia la derecha en la fila actual
@@ -340,6 +339,7 @@ public class Logica2048 {
                         	tablero[row][k] *= 2;
                             tablero[row][k - 1] = 0;
                             enMovimiento = true;
+                            puntaje += tablero[row][k];
                             System.out.println("obteniendo valor: " + tablero[row][k]);
                             break;
                         } else {
@@ -351,7 +351,7 @@ public class Logica2048 {
             }
         }
 
-        return enMovimiento;
+        return puntaje;
     }
 
 
