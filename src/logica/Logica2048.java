@@ -53,19 +53,21 @@ public class Logica2048 {
     }
     
     
-    public void validarPartidaPerdida() {
-        if (tableroLleno()) {
-            if (combinacionesPosibles()) {
-                System.out.println("No quedan combinaciones posibles");
-                perdioPartida = true;
-            } else {
-                System.out.println("Aún hay movimientos posibles");
-                perdioPartida = false;
-            }
-        } else {
-            System.out.println("El tablero no está lleno");
-            perdioPartida = false;
-        }
+    public void validarPartidaPerdida() {//valido si la partida esta perdida
+    	if (tableroLleno()) {
+    		if (combinacionesPosibles()) {
+    			System.out.println("################-------no quedan combinaciones posibles-----------");
+    			perdioPartida = true;
+    			System.out.println("Se actualizo variable perdioPartida: " + perdioPartida);
+    		}else {
+    			System.out.println("XXXXXXXXXXXXX---- valide y la partida continua HAY COMBINACIONES-----");
+    			perdioPartida = false;
+    		}
+    	}else {
+        	System.out.println("XXXXXXXXXXXXX----valide y la partida continua TABLERO CON LUGAR-----");
+    		perdioPartida = false;
+    	}
+
     }
     
     
@@ -102,13 +104,13 @@ public class Logica2048 {
         for (int i = 0; i < tamanio; i++) {
             for (int j = 0; j < tamanio; j++) {
                 if (tablero[i][j] == valorGanador) {
-                    ganoPartida = true;
-                    return true;
+                	ganoPartida = true;
+                    return true; // gano partida
                 }
             }
         }
         ganoPartida = false;
-        return false;
+        return false; // sigue sin ganar
     }
     
     
@@ -345,3 +347,4 @@ public class Logica2048 {
 
     // Métodos adicionales para obtener información sobre el tablero, puntaje, etc.
 }
+

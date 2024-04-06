@@ -158,34 +158,82 @@ public class Interfaz {
         }
     }
 
-    private void recomendarJugada(int[][] tablero) {
-        boolean recomendacionHecha = false; 
-        for (int i = 0; i < grafo.length; i++) {
-            for (int j = 0; j < grafo[i].length; j++) {
-                if (!recomendacionHecha && tablero[i][j] != 0) {
-                    if ((i > 0 && tablero[i - 1][j] == tablero[i][j]) || 
-                        (i < grafo.length - 1 && tablero[i + 1][j] == tablero[i][j]) || 
-                        (j > 0 && tablero[i][j - 1] == tablero[i][j]) || 
-                        (j < grafo[i].length - 1 && tablero[i][j + 1] == tablero[i][j])) { 
-                        grafo[i][j].setBackground(Color.RED);
-                        if (i > 0 && tablero[i - 1][j] == tablero[i][j]) {
-                            grafo[i - 1][j].setBackground(Color.RED);
-                        }
-                        if (i < grafo.length - 1 && tablero[i + 1][j] == tablero[i][j]) {
-                            grafo[i + 1][j].setBackground(Color.RED);
-                        }
-                        if (j > 0 && tablero[i][j - 1] == tablero[i][j]) {
-                            grafo[i][j - 1].setBackground(Color.RED);
-                        }
-                        if (j < grafo[i].length - 1 && tablero[i][j + 1] == tablero[i][j]) {
-                            grafo[i][j + 1].setBackground(Color.RED);
-                        }
-                        recomendacionHecha = true; 
-                    }
-                }
-            }
-        }
-    }
+     private boolean recomendacionHecha = false; 
+
+	private void recomendarJugada(int[][] tablero) {
+		if (!recomendacionHecha) {
+	        for (int i = 0; i < grafo.length; i++) {
+	            for (int j = 0; j < grafo[i].length; j++) {
+	            	// Ignorar bloques valor 0
+	            	if (tablero[i][j] == 0) continue;
+
+	            	if (i > 0) {
+	            		// Buscar index del primer bloque arriba
+	            		int aux = i - 1;
+	            		while (aux >= 0) {
+	            			if (tablero[aux][j] != 0) break;
+	            			else aux--;
+	            		}
+	            		// Si index != -1 y los bloques son iguales
+	            		if (aux >= 0 && tablero[aux][j] == tablero[i][j]) {
+	            			grafo[i][j].setBackground(Color.RED);
+	            			grafo[aux][j].setBackground(Color.RED);
+	            			recomendacionHecha = true;
+	            			return;
+	                    }
+	            	}
+
+	            	// Buscar index del primer bloque abajo
+	                if (i < grafo.length - 1) {
+	            		int aux = i + 1;
+	            		while (aux < grafo.length) {
+	            			if (tablero[aux][j] != 0) break;
+	            			else aux++;
+	            		}
+	            		// si el index != grafo.length - 1 y los bloques son iguales
+	            		if (aux < grafo.length && tablero[aux][j] == tablero[i][j]) {
+		            		grafo[i][j].setBackground(Color.RED);
+		            		grafo[aux][j].setBackground(Color.RED);
+		                    recomendacionHecha = true;
+		                    return;
+	                    }
+	                 }
+	                
+	                // Buscar index del primer bloque a la izquierda
+	                if (j > 0) {
+		            		int aux = j - 1;
+		            		while (aux >= 0) {
+		            			if (tablero[i][aux] != 0) break;
+		            			aux--;
+		            		}
+		            		// si index != -1 y los bloques son iguales
+		            		if (aux >= 0 && tablero[i][aux] == tablero[i][j]) {
+			            		grafo[i][j].setBackground(Color.RED);
+			            		grafo[i][aux].setBackground(Color.RED);
+			                    recomendacionHecha = true;
+			                    return;
+		                    }
+	                 }
+	                 // Buscar index del primer bloque a la derecha
+	                 if (j < grafo[0].length - 1) {
+		            		int aux = j + 1;
+		            		while (aux < grafo[0].length) {
+		            			if (tablero[i][aux] != 0) break;
+		            			aux++;
+		            		}
+		            		// Si index != grafo[0].length - 1 y los bloques son iguales
+		            		if (aux < grafo[0].length && tablero[i][aux] == tablero[i][j]) {
+		            			grafo[i][j].setBackground(Color.RED);
+		            			grafo[i][aux].setBackground(Color.RED);
+		            			recomendacionHecha = true;
+		            			return;
+		                    }
+	                 }
+	            }
+	        }
+		}
+	}
+
     
     private void validarSiPartidaFinalizada() {
         partidaGanada = game.getGanoPartida();
