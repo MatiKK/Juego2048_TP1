@@ -114,11 +114,27 @@ public class Interfaz {
         mensajeEnPantalla.setHorizontalAlignment(SwingConstants.CENTER);
         mensajeEnPantalla.setBounds(10, 421, 400, 26);
         frame.getContentPane().add(mensajeEnPantalla);
+
+        // Puntaje
+        JLabel puntajePantallaTexto = new JLabel("Puntaje: ");
+        puntajePantallaTexto.setFont(new Font("Tahoma", Font.PLAIN, 12));
+        puntajePantallaTexto.setBounds(20, 458, 50, 14);
+        frame.getContentPane().add(puntajePantallaTexto);
+        
+        JLabel puntajePantalla = new JLabel(String.valueOf(puntaje));
+        puntajePantalla.setFont(new Font("Tahoma", Font.PLAIN, 12));
+        puntajePantalla.setBounds(88, 458, 46, 14);
+        frame.getContentPane().add(puntajePantalla);
+
         
         JButton startButton = new JButton("Reiniciar juego");
         startButton.setBounds(304, 458, 150, 30);
         startButton.addActionListener(e -> {
-            game.resetGame(); 
+            game.resetGame();
+
+            puntajePantalla.setText("0");
+            puntaje = 0;
+
             actualizarTablero(); 
             partidaFinalizada = false; 
             partidaGanada = false; 
@@ -177,16 +193,7 @@ public class Interfaz {
         frame.getContentPane().add(btnSugerirJugada);
 
 
-        // Puntaje
-        JLabel puntajePantallaTexto = new JLabel("Puntaje: ");
-        puntajePantallaTexto.setFont(new Font("Tahoma", Font.PLAIN, 12));
-        puntajePantallaTexto.setBounds(20, 458, 50, 14);
-        frame.getContentPane().add(puntajePantallaTexto);
-        
-        JLabel puntajePantalla = new JLabel(String.valueOf(puntaje));
-        puntajePantalla.setFont(new Font("Tahoma", Font.PLAIN, 12));
-        puntajePantalla.setBounds(88, 458, 46, 14);
-        frame.getContentPane().add(puntajePantalla);
+
         
         
 
