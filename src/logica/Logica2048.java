@@ -14,7 +14,7 @@ public class Logica2048 {
     private boolean ganoPartida; //inicializa en false por defecto
     private int valorGanador;
     
-
+    
     
 
     // Enumeración para las direcciones posibles de movimiento
@@ -51,6 +51,21 @@ public class Logica2048 {
     public boolean getPerdioPartida(){
     	return perdioPartida;
     }
+    
+    public boolean isGameWon() {
+        return ganoPartida;
+    }
+
+    public void resetGame() {
+        tablero = new int[tamanio][tamanio];
+        agregarFichaRandom();
+        agregarFichaRandom();
+        gameOver = false;
+        tableroLleno = false;
+        perdioPartida = false;
+        ganoPartida = false;
+    }
+
     
     
     public void validarPartidaPerdida() {//valido si la partida esta perdida
@@ -164,10 +179,15 @@ public class Logica2048 {
                 break;
         }
 
-        // Si se realizó algún movimiento, añadir una nueva ficha y verificar el estado del juego
         if (enMovimiento) {
-            agregarFichaRandom(); // Añadir una nueva ficha aleatoria al final del movimiento
-            //gameOver = checkGameOver(); // Verificar si el juego ha terminado después del movimiento
+            agregarFichaRandom(); 
+            busquedaPiezaGanadora();
+            validarPartidaPerdida();
+            
+           
+            if (isGameWon()) {
+                ganoPartida = true;
+            }
         }
         
         

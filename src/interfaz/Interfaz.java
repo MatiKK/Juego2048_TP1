@@ -103,22 +103,26 @@ public class Interfaz {
             }
         }
 
-        JButton startButton = new JButton("Reiniciar game");
-        startButton.setBounds(144, 458, 150, 30);
-        startButton.addActionListener(e -> {
-            game = new Logica2048(); // Iniciar nuevo juego
-            actualizarTablero();
-            grafo = new JLabel[4][4];
-            frame.requestFocus();//SIGUE SIN FUNCIONAR VALIDAR!!
-        	
-        });
-        frame.getContentPane().add(startButton);
+       
         
         JLabel mensajeEnPantalla = new JLabel("Mueva una tecla para iniciar la partida");
         mensajeEnPantalla.setFont(new Font("Tahoma", Font.PLAIN, 18));
         mensajeEnPantalla.setHorizontalAlignment(SwingConstants.CENTER);
         mensajeEnPantalla.setBounds(10, 421, 400, 26);
         frame.getContentPane().add(mensajeEnPantalla);
+        
+        JButton startButton = new JButton("Reiniciar juego");
+        startButton.setBounds(144, 458, 150, 30);
+        startButton.addActionListener(e -> {
+            game.resetGame(); 
+            actualizarTablero(); 
+            partidaFinalizada = false; 
+            partidaGanada = false; 
+            mensajeEnPantalla.setText("Mueva una tecla para iniciar la partida");
+
+            frame.requestFocus(); 
+        });
+        frame.getContentPane().add(startButton);
         
         JButton exitButton = new JButton("Salir del juego");
         exitButton.setBounds(144, 499, 150, 30);
@@ -172,7 +176,7 @@ public class Interfaz {
         
         
 
-        // Agregar KeyListener para manejar las pulsaciones de teclas
+     // Agregar KeyListener para manejar las pulsaciones de teclas
         frame.addKeyListener(new KeyListener() {
             @Override
             public void keyTyped(KeyEvent e) {
@@ -181,39 +185,43 @@ public class Interfaz {
 
             @Override
             public void keyPressed(KeyEvent e) {
-            	recomendacionHecha = false;
-                int key = e.getKeyCode();
-                switch (key) {
-                    case KeyEvent.VK_UP:
-                        game.move(Logica2048.Direccion.UP);
-                        break;
-                    case KeyEvent.VK_DOWN:
-                        game.move(Logica2048.Direccion.DOWN);
-                        break;
-                    case KeyEvent.VK_LEFT:
-                        game.move(Logica2048.Direccion.LEFT);
-                        break;
-                    case KeyEvent.VK_RIGHT:
-                        game.move(Logica2048.Direccion.RIGHT);
-                        break;
-                }
-                actualizarTablero(); // Actualizar tablero después de mover
-                validarSiPartidaFinalizada();//valido si la partida finalizo
-                System.out.println("El valor de la variable partidaFinalizada es:" + partidaFinalizada);
-                
-                if (partidaFinalizada == true) {
-                	mensajeEnPantalla.setText("Perdiste :( ¡Juego terminado! Gracias por jugar!!");
-                	mensajeEnPantalla.setForeground(Color.red);
-                }else if (partidaGanada == true) {
-                	mensajeEnPantalla.setText("Ganaste :D ¡Juego terminado! Gracias por jugar!!");
-                	mensajeEnPantalla.setForeground(Color.GREEN.darker());
-                }else {
-                	mensajeEnPantalla.setText("Partida en curso");
+                if (!partidaFinalizada) { // Solo permitir movimientos si la partida no ha finalizado
+                    int key = e.getKeyCode();
+                    switch (key) {
+                        case KeyEvent.VK_UP:
+                            game.move(Logica2048.Direccion.UP);
+                            break;
+                        case KeyEvent.VK_DOWN:
+                            game.move(Logica2048.Direccion.DOWN);
+                            break;
+                        case KeyEvent.VK_LEFT:
+                            game.move(Logica2048.Direccion.LEFT);
+                            break;
+                        case KeyEvent.VK_RIGHT:
+                            game.move(Logica2048.Direccion.RIGHT);
+                            break;
+                    }
+                    actualizarTablero(); // Actualizar tablero después de mover
+                    validarSiPartidaFinalizada(); // Validar si la partida ha finalizado
+
+                    // Verificar si el jugador ha ganado después del movimiento
+                    if (partidaGanada) {
+                        partidaFinalizada = true; // Establecer partida finalizada si se ha ganado
+                        mensajeEnPantalla.setText("¡Felicidades! Has ganado.");
+                        mensajeEnPantalla.setForeground(Color.GREEN.darker()); // Color de texto verde oscuro para indicar victoria
+                    } else if (partidaFinalizada) {
+                        mensajeEnPantalla.setText("¡Juego terminado! Gracias por jugar.");
+                        mensajeEnPantalla.setForeground(Color.RED); // Color de texto rojo para indicar derrota
+                    } else {
+                        mensajeEnPantalla.setText("Partida en curso");
+                        mensajeEnPantalla.setForeground(Color.BLACK); // Color de texto negro para partida en curso
+                    }
                 }
             }
 
             @Override
             public void keyReleased(KeyEvent e) {
+                // No es necesario implementar este método
             }
         });
         
