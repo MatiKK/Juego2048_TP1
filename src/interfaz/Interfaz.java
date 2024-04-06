@@ -4,6 +4,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.Random;
+
 import logica.Logica2048;
 
 //import javax.swing.Timer; // Importar Timer de javax.swing
@@ -244,7 +246,64 @@ public class Interfaz {
 
     private void recomendarJugada(int[][] tablero) {
         resetearColores();
+        int combinacionesHorizontales = contarCombinacionesHorizontales(tablero);
+        int combinacionesVerticales = contarCombinacionesVerticales(tablero);
 
+        if (combinacionesHorizontales > 1 || combinacionesVerticales > 1) {
+            Random random = new Random();
+            boolean ejecutarHorizontal = random.nextBoolean();
+
+            if (ejecutarHorizontal) {
+                ejecutarCombinacionesHorizontales(tablero);
+            } else {
+                ejecutarCombinacionesVerticales(tablero);
+            }
+        } else {
+            if (combinacionesHorizontales > 0) {
+                ejecutarCombinacionesHorizontales(tablero);
+            } else if (combinacionesVerticales > 0) {
+                ejecutarCombinacionesVerticales(tablero);
+            }
+        }
+    }
+
+    private int contarCombinacionesHorizontales(int[][] tablero) {
+        int combinaciones = 0;
+        for (int i = 0; i < tablero.length; i++) {
+            for (int j = 0; j < tablero[i].length; j++) {
+                if (tablero[i][j] != 0) {
+                    int col = j - 1;
+                    while (col >= 0 && tablero[i][col] == 0) {
+                        col--;
+                    }
+                    if (col >= 0 && tablero[i][col] == tablero[i][j]) {
+                        combinaciones++;
+                    }
+                }
+            }
+        }
+        return combinaciones;
+    }
+
+    private int contarCombinacionesVerticales(int[][] tablero) {
+        int combinaciones = 0;
+        for (int j = 0; j < tablero[0].length; j++) {
+            for (int i = 0; i < tablero.length; i++) {
+                if (tablero[i][j] != 0) {
+                    int row = i - 1;
+                    while (row >= 0 && tablero[row][j] == 0) {
+                        row--;
+                    }
+                    if (row >= 0 && tablero[row][j] == tablero[i][j]) {
+                        combinaciones++;
+                    }
+                }
+            }
+        }
+        return combinaciones;
+    }
+
+    private void ejecutarCombinacionesHorizontales(int[][] tablero) {
         for (int i = 0; i < tablero.length; i++) {
             for (int j = 0; j < tablero[i].length; j++) {
                 if (tablero[i][j] != 0) {
@@ -254,11 +313,14 @@ public class Interfaz {
                     }
                     if (col >= 0 && tablero[i][col] == tablero[i][j]) {
                         marcarCombinacionHorizontal(tablero, i, col, j);
+                        return;
                     }
                 }
             }
         }
+    }
 
+    private void ejecutarCombinacionesVerticales(int[][] tablero) {
         for (int j = 0; j < tablero[0].length; j++) {
             for (int i = 0; i < tablero.length; i++) {
                 if (tablero[i][j] != 0) {
@@ -268,11 +330,13 @@ public class Interfaz {
                     }
                     if (row >= 0 && tablero[row][j] == tablero[i][j]) {
                         marcarCombinacionVertical(tablero, row, j, i);
+                        return;
                     }
                 }
             }
         }
     }
+
 
     private void marcarCombinacionHorizontal(int[][] tablero, int row, int startCol, int endCol) {
         int value = tablero[row][startCol];
