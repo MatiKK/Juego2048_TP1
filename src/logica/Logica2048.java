@@ -7,13 +7,11 @@ public class Logica2048 {
     private int[][] tablero; // Representación del tablero
     private boolean gameOver; // Indica si el juego ha terminado
     private Random random; // Generador de números aleatorios
-    private boolean enMovimiento;
-    private boolean tableroLleno;//flag para validar si el tablero esta lleno
-    
+
     private boolean perdioPartida; //inicializa en false por defecto
     private boolean ganoPartida; //inicializa en false por defecto
     private int valorGanador;
-    
+    private int cantidadFichas;
     
     
 
@@ -32,7 +30,6 @@ public class Logica2048 {
         agregarFichaRandom();
         agregarFichaRandom();
         gameOver = false;
-        tableroLleno = false;
         valorGanador = 64;
     }
     
@@ -56,14 +53,18 @@ public class Logica2048 {
         return ganoPartida;
     }
 
+    private int espacioParaFichas() {
+    	return tamanio * tamanio;
+    }
+    
     public void resetGame() {
         tablero = new int[tamanio][tamanio];
-        agregarFichaRandom();
-        agregarFichaRandom();
         gameOver = false;
-        tableroLleno = false;
         perdioPartida = false;
         ganoPartida = false;
+        cantidadFichas = 0;
+        agregarFichaRandom();
+        agregarFichaRandom();
     }
 
     
@@ -100,18 +101,8 @@ public class Logica2048 {
     
 
 
-    
     public boolean tableroLleno() {
-        for (int i = 0; i < tamanio; i++) {
-            for (int j = 0; j < tamanio; j++) {
-                if (tablero[i][j] == 0) {
-                	tableroLleno = false;
-                    return false; // El tablero tiene espacios vacios
-                }
-            }
-        }
-        tableroLleno = true;
-        return true; // El tablero está lleno
+    	return espacioParaFichas() == cantidadFichas;
     }
     
     
@@ -131,7 +122,7 @@ public class Logica2048 {
     
 
     private void agregarFichaRandom() {
-    	if (!tableroLleno) {
+    	if (!tableroLleno()) {
     		// Añade una nueva ficha (2) en una posición aleatoria vacía del tablero
             //int value = 2; //random.nextDouble() < 0.9 ? 2 : 4; // Probabilidad de 90% para 2 y 10% para 4
             int value = random.nextDouble () < 0.9 ? 2 : 4;
@@ -141,19 +132,21 @@ public class Logica2048 {
                 col = random.nextInt(tamanio);
             } while (tablero[row][col] != 0); // Busca una posición vacía
             tablero[row][col] = value;
+            cantidadFichas++;
     	}else {
     		System.out.println("El tablero esta lleno no puedo agregar mas fichas");
     	}
         
     }
 
+// ? No se usa este método en ningún lado
     public boolean getMove() {
-    	return enMovimiento;
+    	//    	return enMovimiento;
+    	return false;
     }
     
     public int move(Direccion direccion) {
         // Variable para verificar si se realizó algún movimiento
-    	enMovimiento = false;
     	int puntaje = 0;
         // Aplicar lógica de movimiento según la dirección especificada
         switch (direccion) {
@@ -177,9 +170,10 @@ public class Logica2048 {
             	busquedaPiezaGanadora();
             	validarPartidaPerdida();
                 break;
+            default:
+            	return 0;
         }
 
-        if (enMovimiento) {
             agregarFichaRandom(); 
             busquedaPiezaGanadora();
             validarPartidaPerdida();
@@ -188,8 +182,8 @@ public class Logica2048 {
             if (isGameWon()) {
                 ganoPartida = true;
             }
-        }
 
+           System.out.println("Hay " + cantidadFichas+" fichas en el tablero.");
         return puntaje;
     }
     
@@ -212,14 +206,13 @@ public class Logica2048 {
                             
                             System.out.println("dejo: " + (k+1) + "-" +col + " vacia");
                             tablero[k + 1][col] = 0;
-                            enMovimiento = true;
                         } else if (tablero[k][col] == tablero[k + 1][col]) {
                             // Combinar fichas
                         	System.out.println("como fila: " + k + " columna: " + col + " y fila: " + (k+1) + " columna: " + col + " tienen misma valor, las sumo");
                             tablero[k][col] *= 2;
                             tablero[k + 1][col] = 0;
-                            enMovimiento = true;
                             puntaje += tablero[k][col];
+                            cantidadFichas--;
                             System.out.println("obteniendo valor: " + tablero[k][col]);
                             break;
                         } else {
@@ -251,14 +244,13 @@ public class Logica2048 {
                             
                             tablero[k][col] = tablero[k - 1][col];
                             tablero[k - 1][col] = 0;
-                            enMovimiento = true;
                         } else if (tablero[k][col] == tablero[k - 1][col]) {
                             // Combinar fichas
                         	System.out.println("como fila: " + k + " columna: " + col + " y fila: " + (k-1) + " columna: " + col + " tienen el mismo valor, las sumo");
                             tablero[k][col] *= 2;
                             tablero[k - 1][col] = 0;
-                            enMovimiento = true;
                             puntaje += tablero[k][col];
+                            cantidadFichas--;
                             System.out.println("obteniendo valor: " + tablero[k][col]);
                             break;
                         } else {
@@ -289,15 +281,14 @@ public class Logica2048 {
                         	System.out.println(row + "-" + k + " esta vacia" + " y como a la izquierda esta vacio muevo ficha:" + tablero[row][k+1] +  " fila:" + row + " col:" + (k+1) + " a: " + "fila:" + row + " col:" + k);                            
                             tablero[row][k] = tablero[row][k + 1];
                             tablero[row][k + 1] = 0;
-                            enMovimiento = true;
                         } else if (tablero[row][k] == tablero[row][k + 1]) {
                             // Combinar fichas
                         	System.out.println("como fila: " + row + " columna: " + k + " y fila: " + (row) + " columna: " + (k+1) + " tienen el mismo valor, las sumo");
                             
                         	tablero[row][k] *= 2;
                             tablero[row][k + 1] = 0;
-                            enMovimiento = true;
                             puntaje += tablero[row][k];
+                            cantidadFichas--;
                             System.out.println("obteniendo valor: " + tablero[row][k]);                            
                             break;
                         } else {
@@ -328,14 +319,13 @@ public class Logica2048 {
                         	System.out.println(row + "-" + k + " esta vacia" + " y como a la derecha esta vacio muevo ficha:" + tablero[row][k-1] +  " fila:" + row + " col:" + (k-1) + " a: " + "fila:" + row + " col:" + k);                            
                             tablero[row][k] = tablero[row][k - 1];
                             tablero[row][k - 1] = 0;
-                            enMovimiento = true;
                         } else if (tablero[row][k] == tablero[row][k - 1]) {
                             // Combinar fichas
                         	System.out.println("como fila: " + row + " columna: " + (k-1) + " y fila: " + (row) + " columna: " + (k) + " tienen el mismo valor, las sumo");
                         	tablero[row][k] *= 2;
                             tablero[row][k - 1] = 0;
-                            enMovimiento = true;
                             puntaje += tablero[row][k];
+                            cantidadFichas--;
                             System.out.println("obteniendo valor: " + tablero[row][k]);
                             break;
                         } else {
