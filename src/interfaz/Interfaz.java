@@ -246,20 +246,54 @@ public class Interfaz {
         resetearColores();
 
         for (int i = 0; i < tablero.length; i++) {
-            for (int j = 0; j < tablero[i].length - 1; j++) {
-                if (tablero[i][j] != 0 && tablero[i][j] == tablero[i][j + 1]) {
-                    marcarCombinacion(i, j, i, j + 1);
+            for (int j = 0; j < tablero[i].length; j++) {
+                if (tablero[i][j] != 0) {
+                    int col = j - 1;
+                    while (col >= 0 && tablero[i][col] == 0) {
+                        col--;
+                    }
+                    if (col >= 0 && tablero[i][col] == tablero[i][j]) {
+                        marcarCombinacionHorizontal(tablero, i, col, j);
+                    }
                 }
             }
         }
 
         for (int j = 0; j < tablero[0].length; j++) {
-            for (int i = 0; i < tablero.length - 1; i++) {
-                if (tablero[i][j] != 0 && tablero[i][j] == tablero[i + 1][j]) {
-                    marcarCombinacion(i, j, i + 1, j);
+            for (int i = 0; i < tablero.length; i++) {
+                if (tablero[i][j] != 0) {
+                    int row = i - 1;
+                    while (row >= 0 && tablero[row][j] == 0) {
+                        row--;
+                    }
+                    if (row >= 0 && tablero[row][j] == tablero[i][j]) {
+                        marcarCombinacionVertical(tablero, row, j, i);
+                    }
                 }
             }
         }
+    }
+
+    private void marcarCombinacionHorizontal(int[][] tablero, int row, int startCol, int endCol) {
+        int value = tablero[row][startCol];
+        for (int col = startCol; col <= endCol; col++) {
+            if (tablero[row][col] == value) {
+                marcarCelda(row, col);
+            }
+        }
+    }
+
+    private void marcarCombinacionVertical(int[][] tablero, int startRow, int col, int endRow) {
+        int value = tablero[startRow][col];
+        for (int row = startRow; row <= endRow; row++) {
+            if (tablero[row][col] == value) {
+                marcarCelda(row, col);
+            }
+        }
+    }
+
+    private void marcarCelda(int row, int col) {
+        grafo[row][col].setBackground(Color.RED);
     }
 
     private void resetearColores() {
@@ -270,13 +304,6 @@ public class Interfaz {
         }
     }
 
-    private void marcarCombinacion(int row1, int col1, int row2, int col2) {
-        grafo[row1][col1].setBackground(Color.RED);
-        grafo[row2][col2].setBackground(Color.RED);
-    }
-
-
- 
     
     public void validarSiPartidaFinalizada() {
         partidaGanada = game.getGanoPartida();
