@@ -71,7 +71,7 @@ public class Interfaz {
 
     private void initialize() {
         frame = new JFrame();
-        frame.setBounds(100, 100, 500, 600); // Ajustar tamaño de la ventana
+        frame.setBounds(100, 100, 500, 650); // Ajustar tamaño de la ventana
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.getContentPane().setLayout(null);
 
@@ -88,7 +88,7 @@ public class Interfaz {
         
         
         JPanel boardPanel = new JPanel();
-        boardPanel.setBounds(10, 10, 400, 400);
+        boardPanel.setBounds(39, 10, 400, 400);
         boardPanel.setBackground(Color.LIGHT_GRAY);
         boardPanel.setLayout(new GridLayout(4, 4, 5, 5)); // Layout para organizar las etiquetas
         frame.getContentPane().add(boardPanel);
@@ -135,7 +135,7 @@ public class Interfaz {
         startButton.setBounds(304, 458, 150, 30);
         startButton.addActionListener(e -> {
             
-        	registrarPuntaje();
+        	//registrarPuntaje();
         	
         	game.resetGame();
 
@@ -152,7 +152,7 @@ public class Interfaz {
         frame.getContentPane().add(startButton);
         
         JButton exitButton = new JButton("Salir del juego");
-        exitButton.setBounds(304, 498, 150, 30);
+        exitButton.setBounds(225, 539, 150, 30);
         exitButton.addActionListener(e -> {
         	System.exit(0);//salgo del juego
         });
@@ -201,7 +201,7 @@ public class Interfaz {
 
         
         JButton btnMarcador = new JButton("Marcador");
-        btnMarcador.setBounds(395, 62, 89, 23);
+        btnMarcador.setBounds(304, 498, 150, 30);
         btnMarcador.addActionListener(e -> {
         	marcador.mostrarEnPantalla();
         });
