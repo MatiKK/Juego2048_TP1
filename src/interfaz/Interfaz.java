@@ -1,12 +1,15 @@
 package interfaz;
 
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.Random;
-
 import logica.Logica2048;
+
 
 //import javax.swing.Timer; // Importar Timer de javax.swing
 
@@ -51,8 +54,6 @@ public class Interfaz {
         initialize();
         actualizarTablero(); // Actualizar tablero al iniciar la interfaz
         validarSiPartidaFinalizada();
-        marcador = new MarcadorInterfaz();
-        
         /*if (game.tableroLleno()) {
         	System.out.println("WARNING: TABLERO LLENO");
         	game.combinacionesPosibles();
@@ -74,8 +75,13 @@ public class Interfaz {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.getContentPane().setLayout(null);
 
-        
-        
+        marcador = new MarcadorInterfaz();
+        marcador.addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent e) {
+            	marcador.setVisible(false); // Oculta el frame en lugar de cerrarlo
+            	frame.requestFocus();
+            }
+        });
         
         
         
