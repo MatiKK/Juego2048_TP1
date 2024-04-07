@@ -3,7 +3,9 @@ package interfaz;
 
 import java.awt.EventQueue;
 import javax.swing.JFrame;
-import java.util.LinkedList;
+
+import java.util.Comparator;
+import java.util.TreeSet;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 import java.awt.Font;
@@ -11,7 +13,7 @@ import java.awt.Font;
 public class MarcadorInterfaz extends JFrame {
 
 	private JLabel labelPuntuaciones;
-	private LinkedList<Registro> registros;
+	private TreeSet<Registro> registros;
 
 	/**
 	 * Launch the application.
@@ -48,7 +50,11 @@ public class MarcadorInterfaz extends JFrame {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setVisible(false);
 
-		registros = new LinkedList<Registro>();
+		registros = new TreeSet<>(new Comparator<Registro>() {
+			public int compare(Registro r1, Registro r2) {
+				return r1.compareTo(r2);
+			}
+		});
 
 		getContentPane().setLayout(null);
 		
@@ -66,14 +72,23 @@ public class MarcadorInterfaz extends JFrame {
 	void registrarPuntacion(String nombre, int puntaje){
 		Registro nuevoRegistro = new Registro(nombre, puntaje);
 		registros.add(nuevoRegistro);
-		
-		if (registros.size() == 1) {
-			labelPuntuaciones.setText(nuevoRegistro.toString());
-		} else {
-			labelPuntuaciones.setText(
-					labelPuntuaciones.getText() + "\n" + nuevoRegistro.toString()
-					);
-		}
 
+		StringBuilder sb = new StringBuilder();
+
+//		Si está ordenado de menor a mayor
+//		java.util.Iterator<Registro> iteratorRegistros = registros.descendingIterator();
+//		while (iteratorRegistros.hasNext())
+//			System.out.println(iteratorRegistros.next());
+
+//		Si está ordenado de mayor a menor
+		sb.append("<html>");
+		for (Registro r: registros) {
+			sb.append(r).append("<br>");
+			System.out.println(r);
+		}
+		sb.append("</html>");
+		labelPuntuaciones.setText(sb.toString());
+		// Prefiero usar otra forma, como una jtable o algo más pasable
+		// Pero esto es inicial
 	}
 }
