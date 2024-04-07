@@ -2,6 +2,8 @@ package interfaz;
 
 
 import javax.swing.*;
+import javax.swing.border.LineBorder;
+
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -243,7 +245,7 @@ public class Interfaz {
                         	puntajeGanado = game.move(Logica2048.Direccion.RIGHT);
                             break;
                     }
-
+                    resetearSugerencia();//limpio la sugerencia en caso de que exista
                     actualizarTablero(); // Actualizar tablero después de mover
                     validarSiPartidaFinalizada(); // Validar si la partida ha finalizado
 
@@ -303,10 +305,26 @@ public class Interfaz {
         for (int i = 0; i < grafo.length; i++) {
             for (int j = 0; j < grafo[i].length; j++) {
                 grafo[i][j].setText(tablero[i][j] == 0 ? "" : String.valueOf(tablero[i][j]));
-                grafo[i][j].setBackground(Color.WHITE); 
+                //grafo[i][j].setBackground(Color.WHITE);
+                grafo[i][j].setOpaque(true);
+                int valor = tablero[i][j];
+                Color colorFondo = getColorFondoPorValor(valor);
+                grafo[i][j].setBackground(colorFondo);
+                grafo[i][j].setForeground(Color.BLACK);
+                
+               
             }
         }
         //recomendarJugada(tablero);
+    }
+    
+    private Color getColorFondoPorValor(int valor) {
+        // Calcular el color gradual basado en el valor de la ficha, hay que revisar con valores altos, 
+        int red = 255 - Math.min(255, 255 * valor / game.getValorGanador()); // Escala de rojo de 255 a 0
+        int green = 255 - Math.min(255, 255 * valor / game.getValorGanador()); // Escala de verde de 255 a 0
+        int blue = 255; // Azul al maximo
+
+        return new Color(red, green, blue);
     }
 
     private void recomendarJugada(int[][] tablero) {
@@ -422,13 +440,24 @@ public class Interfaz {
     }
 
     private void marcarCelda(int row, int col) {
-        grafo[row][col].setBackground(Color.RED);
+    	grafo[row][col].setBorder(new LineBorder(Color.RED));
+    	actualizarTablero();
+        //grafo[row][col].setBackground(Color.RED);
+    	
     }
 
     private void resetearColores() {
         for (JLabel[] row : grafo) {
             for (JLabel label : row) {
                 label.setBackground(Color.WHITE);
+            }
+        }
+    }
+    
+    private void resetearSugerencia() {
+    	for (JLabel[] row : grafo) {
+            for (JLabel label : row) {
+                label.setBorder(new LineBorder(Color.WHITE));
             }
         }
     }
