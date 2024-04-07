@@ -14,6 +14,7 @@ import logica.Logica2048;
 
 public class Interfaz {
     private JFrame frame;
+    private MarcadorInterfaz marcador;
     private JLabel[][] grafo;
     private Logica2048 game;
     /*ver si los puedo usar despues para animacion mas suave
@@ -50,10 +51,7 @@ public class Interfaz {
         initialize();
         actualizarTablero(); // Actualizar tablero al iniciar la interfaz
         validarSiPartidaFinalizada();
-        
-        
-
-        
+        marcador = new MarcadorInterfaz();
         
         /*if (game.tableroLleno()) {
         	System.out.println("WARNING: TABLERO LLENO");
@@ -130,7 +128,10 @@ public class Interfaz {
         JButton startButton = new JButton("Reiniciar juego");
         startButton.setBounds(304, 458, 150, 30);
         startButton.addActionListener(e -> {
-            game.resetGame();
+            
+        	registrarPuntaje();
+        	
+        	game.resetGame();
 
             puntajePantalla.setText("0");
             puntaje = 0;
@@ -192,10 +193,14 @@ public class Interfaz {
         });
         frame.getContentPane().add(btnSugerirJugada);
 
-
-
         
-        
+        JButton btnMarcador = new JButton("Marcador");
+        btnMarcador.setBounds(395, 62, 89, 23);
+        btnMarcador.addActionListener(e -> {
+        	marcador.mostrarEnPantalla();
+        });
+        frame.getContentPane().add(btnMarcador);
+
 
      // Agregar KeyListener para manejar las pulsaciones de teclas
         frame.addKeyListener(new KeyListener() {
@@ -246,9 +251,13 @@ public class Interfaz {
                         partidaFinalizada = true; // Establecer partida finalizada si se ha ganado
                         mensajeEnPantalla.setText("¡Felicidades! Has ganado.");
                         mensajeEnPantalla.setForeground(Color.GREEN.darker()); // Color de texto verde oscuro para indicar victoria
+                        registrarPuntaje();
+                        // preguntar si quiere volver a jugar
                     } else if (partidaFinalizada) {
                         mensajeEnPantalla.setText("¡Juego terminado! Gracias por jugar.");
                         mensajeEnPantalla.setForeground(Color.RED); // Color de texto rojo para indicar derrota
+                        registrarPuntaje();
+                        // preguntar si quiere volver a jugar
                     } else {
                         mensajeEnPantalla.setText("Partida en curso");
                         mensajeEnPantalla.setForeground(Color.BLACK); // Color de texto negro para partida en curso
@@ -266,6 +275,21 @@ public class Interfaz {
         frame.setFocusable(true); // Permitir que la ventana tenga el foco para recibir eventos de teclado
         
     }
+    
+    
+    
+    private String pedirNombre() {
+    	return JOptionPane.showInputDialog(frame, "Ingrese su nombre para registrar su puntuación:");
+    }
+    
+    void registrarPuntaje() {
+    	String nombre = pedirNombre();
+    	int puntuacion = puntaje;
+    	marcador.registrarPuntacion(nombre, puntuacion);
+    }
+    
+    
+    
 
     private void actualizarTablero() {
         int[][] tablero = game.obtenerTablero();
@@ -412,4 +436,6 @@ public class Interfaz {
         // Cerrar la aplicación
         //System.exit(0);
     }
+
+
 }
