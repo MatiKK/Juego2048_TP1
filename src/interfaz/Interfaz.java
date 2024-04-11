@@ -22,19 +22,18 @@ public class Interfaz {
     private MarcadorInterfaz marcador;
     private JLabel[][] grafo;
     private Logica2048 game;
-    /*ver si los puedo usar despues para animacion mas suave
-    private Timer temporizador;
-    private int posicionActualX, posicionObjetivoX;
-    private final int duracionAnimacion = 500; // Duración de la animación en milisegundos
-    */
     private boolean partidaFinalizada;
     private boolean partidaGanada;
     private int puntaje;
 
     //private JButton cargarDatosButton;
     //cargarDatosButton = new JButton("Cargar Datos");
-
-
+    /*ver si los puedo usar despues para animacion mas suave
+    private Timer temporizador;
+    private int posicionActualX, posicionObjetivoX;
+    private final int duracionAnimacion = 500; // Duración de la animación en milisegundos
+    */
+    
     public static void main(String[] args) {
         EventQueue.invokeLater(() -> {
             try {
@@ -85,22 +84,12 @@ public class Interfaz {
             }
         });
         
-        
-        
-        
-        
         JPanel boardPanel = new JPanel();
         boardPanel.setBounds(39, 10, 400, 400);
         boardPanel.setBackground(Color.LIGHT_GRAY);
         boardPanel.setLayout(new GridLayout(4, 4, 5, 5)); // Layout para organizar las etiquetas
         frame.getContentPane().add(boardPanel);
         
-        
-        
-        
-        
-        
-
         grafo = new JLabel[4][4];
         for (int i = 0; i < grafo.length; i++) {
             for (int j = 0; j < grafo[i].length; j++) {
@@ -113,12 +102,11 @@ public class Interfaz {
             }
         }
 
-       
         
         JLabel mensajeEnPantalla = new JLabel("Mueva una tecla para iniciar la partida");
         mensajeEnPantalla.setFont(new Font("Tahoma", Font.PLAIN, 18));
         mensajeEnPantalla.setHorizontalAlignment(SwingConstants.CENTER);
-        mensajeEnPantalla.setBounds(10, 421, 400, 26);
+        mensajeEnPantalla.setBounds(39, 421, 400, 26);
         frame.getContentPane().add(mensajeEnPantalla);
 
         // Puntaje
@@ -136,19 +124,14 @@ public class Interfaz {
         JButton startButton = new JButton("Reiniciar juego");
         startButton.setBounds(304, 458, 150, 30);
         startButton.addActionListener(e -> {
-            
         	//registrarPuntaje();
-        	
         	game.resetGame();
-
             puntajePantalla.setText("0");
             puntaje = 0;
-
             actualizarTablero(); 
             partidaFinalizada = false; 
             partidaGanada = false; 
             mensajeEnPantalla.setText("Mueva una tecla para iniciar la partida");
-
             frame.requestFocus(); 
         });
         frame.getContentPane().add(startButton);
@@ -279,12 +262,11 @@ public class Interfaz {
             }
         });
         
-
-        frame.setFocusable(true); // Permitir que la ventana tenga el foco para recibir eventos de teclado
-        
+        frame.setFocusable(true); // Permitir que la ventana tenga el foco para recibir eventos de teclado   
     }
     
     
+    //Metodos
     
     private String pedirNombre() {
     	return JOptionPane.showInputDialog(frame, "Ingrese su nombre para registrar su puntuación:");
@@ -295,9 +277,6 @@ public class Interfaz {
     	int puntuacion = puntaje;
     	marcador.registrarPuntacion(nombre, puntuacion);
     }
-    
-    
-    
 
     private void actualizarTablero() {
         int[][] tablero = game.obtenerTablero();
@@ -310,9 +289,7 @@ public class Interfaz {
                 int valor = tablero[i][j];
                 Color colorFondo = getColorFondoPorValor(valor);
                 grafo[i][j].setBackground(colorFondo);
-                grafo[i][j].setForeground(Color.BLACK);
-                
-               
+                grafo[i][j].setForeground(Color.BLACK); 
             }
         }
         //recomendarJugada(tablero);
@@ -323,7 +300,6 @@ public class Interfaz {
         int red = 255 - Math.min(255, 255 * valor / game.getValorGanador()); // Escala de rojo de 255 a 0
         int green = 255 - Math.min(255, 255 * valor / game.getValorGanador()); // Escala de verde de 255 a 0
         int blue = 255; // Azul al maximo
-
         return new Color(red, green, blue);
     }
 
@@ -471,6 +447,5 @@ public class Interfaz {
         // Cerrar la aplicación
         //System.exit(0);
     }
-
 
 }
