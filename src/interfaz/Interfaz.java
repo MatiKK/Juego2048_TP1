@@ -72,6 +72,7 @@ public class Interfaz {
 
     private void initialize() {
         frame = new JFrame();
+        frame.getContentPane().setBackground(new Color(251, 230, 198));
         frame.setBounds(100, 100, 500, 650); // Ajustar tamaño de la ventana
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.getContentPane().setLayout(null);
@@ -85,6 +86,7 @@ public class Interfaz {
         });
         
         JPanel boardPanel = new JPanel();
+        boardPanel.setBorder(new LineBorder(new Color(0, 0, 0), 4));
         boardPanel.setBounds(39, 10, 400, 400);
         boardPanel.setBackground(Color.LIGHT_GRAY);
         boardPanel.setLayout(new GridLayout(4, 4, 5, 5)); // Layout para organizar las etiquetas
@@ -97,7 +99,7 @@ public class Interfaz {
                 grafo[i][j].setOpaque(true);
                 grafo[i][j].setBackground(Color.WHITE);
                 grafo[i][j].setHorizontalAlignment(SwingConstants.CENTER); // Centrar texto
-                grafo[i][j].setFont(new Font("Arial", Font.BOLD, 24)); // Tamaño de la fuente
+                grafo[i][j].setFont(new Font("Arial", Font.BOLD, 28)); // Tamaño de la fuente
                 boardPanel.add(grafo[i][j]);
             }
         }
@@ -111,13 +113,13 @@ public class Interfaz {
 
         // Puntaje
         JLabel puntajePantallaTexto = new JLabel("Puntaje: ");
-        puntajePantallaTexto.setFont(new Font("Tahoma", Font.PLAIN, 12));
-        puntajePantallaTexto.setBounds(20, 458, 50, 14);
+        puntajePantallaTexto.setFont(new Font("Tahoma", Font.BOLD, 14));
+        puntajePantallaTexto.setBounds(17, 459, 76, 26);
         frame.getContentPane().add(puntajePantallaTexto);
         
         JLabel puntajePantalla = new JLabel(String.valueOf(puntaje));
-        puntajePantalla.setFont(new Font("Tahoma", Font.PLAIN, 12));
-        puntajePantalla.setBounds(88, 458, 46, 14);
+        puntajePantalla.setFont(new Font("Tahoma", Font.BOLD, 14));
+        puntajePantalla.setBounds(99, 463, 46, 19);
         frame.getContentPane().add(puntajePantalla);
 
         
@@ -146,16 +148,14 @@ public class Interfaz {
 
         
         
-        JLabel mensajeEnPantalla_1 = new JLabel("Alcanzar Nro:");
-        mensajeEnPantalla_1.setHorizontalAlignment(SwingConstants.CENTER);
-        mensajeEnPantalla_1.setFont(new Font("Tahoma", Font.PLAIN, 12));
-        mensajeEnPantalla_1.setBounds(10, 499, 87, 26);
+        JLabel mensajeEnPantalla_1 = new JLabel("Dificultad:");
+        mensajeEnPantalla_1.setFont(new Font("Tahoma", Font.BOLD, 14));
+        mensajeEnPantalla_1.setBounds(17, 502, 76, 26);
         frame.getContentPane().add(mensajeEnPantalla_1);
         
         JLabel mensajeEnPantalla_Num = new JLabel(String.valueOf(game.getValorGanador()));
-        mensajeEnPantalla_Num.setHorizontalAlignment(SwingConstants.CENTER);
-        mensajeEnPantalla_Num.setFont(new Font("Tahoma", Font.PLAIN, 12));
-        mensajeEnPantalla_Num.setBounds(92, 499, 42, 26);
+        mensajeEnPantalla_Num.setFont(new Font("Tahoma", Font.BOLD, 14));
+        mensajeEnPantalla_Num.setBounds(99, 502, 42, 26);
         frame.getContentPane().add(mensajeEnPantalla_Num);
         
         
