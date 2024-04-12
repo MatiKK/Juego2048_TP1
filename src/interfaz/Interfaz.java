@@ -163,11 +163,31 @@ public class Interfaz {
         JButton btnElegirDificultad = new JButton("Elegir dificultad");
         btnElegirDificultad.setBounds(170, 498, 124, 30);
         btnElegirDificultad.addActionListener(e -> {
-        	String input = JOptionPane.showInputDialog(frame, "Ingrese el numero que se deberá alcanzar.");
+        	String input; //= JOptionPane.showInputDialog(frame, "Ingrese el numero que se deberá alcanzar.");
+        	boolean numeroValido = false;
+        	int numero;// = Integer.parseInt(input);
         	
-        	int numero = Integer.parseInt(input);
+        	while (!numeroValido) {
+                input = JOptionPane.showInputDialog(frame, "Ingrese el número que se deberá alcanzar.");
+                
+                try {
+                    numero = Integer.parseInt(input);
+                    // Verificar si el número ingresado es válido
+                    if (esPotenciaDeDos(numero)) {
+                    	numeroValido = true;
+                    	numero = Integer.parseInt(input);
+                    	game.updateValorGanador(numero);
+                    	
+                    } else {
+                        JOptionPane.showMessageDialog(frame, "Ingrese un número válido (2, 4, 8, 16, ..., 2048).", "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                } catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(frame, "Ingrese un número válido.", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        	//numero = Integer.parseInt(input);
+        	//game.updateValorGanador(numero);
         	
-        	game.updateValorGanador(numero);
         	mensajeEnPantalla_Num.setText(String.valueOf(game.getValorGanador()));
         	
         	frame.requestFocus();// soluciono problema con botones ya que sin esto no me reconoce las teclas y no puedo continuar //comentario para informe
@@ -268,6 +288,19 @@ public class Interfaz {
     
     //Metodos
     
+    public boolean esPotenciaDeDos(int numero) {
+        if (numero <= 0) {
+            return false; 
+        }
+        while (numero > 1) {
+            if (numero % 2 != 0) {
+                return false; // Si el num no es divisible por 2, no es potencia de 2
+            }
+            numero = numero/2; // Dividir el num por 2 para verificar si es potencia de 2
+        }
+        return true; 
+    } 
+
     private String pedirNombre() {
     	return JOptionPane.showInputDialog(frame, "Ingrese su nombre para registrar su puntuación:");
     }
