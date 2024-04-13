@@ -390,6 +390,9 @@ public class Interfaz {
                 ejecutarCombinacionesHorizontales(tablero);
             } else if (combinacionesVerticales > 0) {
                 ejecutarCombinacionesVerticales(tablero);
+            }else {
+            	System.out.println("no encontre");
+            	actualizarTablero();
             }
         }
     }
