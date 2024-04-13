@@ -25,7 +25,9 @@ public class Interfaz {
     private boolean partidaFinalizada;
     private boolean partidaGanada;
     private int puntaje;
-
+    private JLabel puntajePantalla;
+    private JLabel mensajeEnPantalla;    
+    
     //private JButton cargarDatosButton;
     //cargarDatosButton = new JButton("Cargar Datos");
     /*ver si los puedo usar despues para animacion mas suave
@@ -105,7 +107,7 @@ public class Interfaz {
         }
 
         
-        JLabel mensajeEnPantalla = new JLabel("Mueva una tecla para iniciar la partida");
+        mensajeEnPantalla = new JLabel("Mueva una tecla para iniciar la partida");
         mensajeEnPantalla.setFont(new Font("Tahoma", Font.PLAIN, 18));
         mensajeEnPantalla.setHorizontalAlignment(SwingConstants.CENTER);
         mensajeEnPantalla.setBounds(39, 421, 400, 26);
@@ -117,7 +119,7 @@ public class Interfaz {
         puntajePantallaTexto.setBounds(17, 459, 76, 26);
         frame.getContentPane().add(puntajePantallaTexto);
         
-        JLabel puntajePantalla = new JLabel(String.valueOf(puntaje));
+        puntajePantalla = new JLabel(String.valueOf(puntaje));
         puntajePantalla.setFont(new Font("Tahoma", Font.BOLD, 14));
         puntajePantalla.setBounds(99, 463, 46, 19);
         frame.getContentPane().add(puntajePantalla);
@@ -126,15 +128,7 @@ public class Interfaz {
         JButton startButton = new JButton("Reiniciar juego");
         startButton.setBounds(304, 458, 150, 30);
         startButton.addActionListener(e -> {
-        	//registrarPuntaje();
-        	game.resetGame();
-            puntajePantalla.setText("0");
-            puntaje = 0;
-            actualizarTablero(); 
-            partidaFinalizada = false; 
-            partidaGanada = false; 
-            mensajeEnPantalla.setText("Mueva una tecla para iniciar la partida");
-            frame.requestFocus(); 
+        	reiniciarJuego();
         });
         frame.getContentPane().add(startButton);
         
@@ -262,13 +256,29 @@ public class Interfaz {
                         partidaFinalizada = true; // Establecer partida finalizada si se ha ganado
                         mensajeEnPantalla.setText("¡Felicidades! Has ganado.");
                         mensajeEnPantalla.setForeground(Color.GREEN.darker()); // Color de texto verde oscuro para indicar victoria
-                        registrarPuntaje();
-                        // preguntar si quiere volver a jugar
+                        if (jugadorQuiereSeguirLaPartida()) {
+                        	// TODO
+                        }
+                        else if (jugadorQuiereGuardarPuntuacion()) {
+                        	registrarPuntaje();                        	
+                        }
+                        if (jugadorJugarNuevaPartida()) {
+                        	reiniciarJuego();
+                        } else {
+                        	System.exit(0);
+                        }
                     } else if (partidaFinalizada) {
                         mensajeEnPantalla.setText("¡Juego terminado! Gracias por jugar.");
                         mensajeEnPantalla.setForeground(Color.RED); // Color de texto rojo para indicar derrota
-                        registrarPuntaje();
-                        // preguntar si quiere volver a jugar
+                        
+                        if (jugadorQuiereGuardarPuntuacion()) {
+                        	registrarPuntaje();                        	
+                        }
+                        if (jugadorQuiereJugarNuevaPartida()) {
+                        	reiniciarJuego();
+                        } else {
+                        	System.exit(0);
+                        }
                     } else {
                         mensajeEnPantalla.setText("Partida en curso");
                         mensajeEnPantalla.setForeground(Color.BLACK); // Color de texto negro para partida en curso
@@ -288,6 +298,17 @@ public class Interfaz {
     
     //Metodos
     
+    private void reiniciarJuego() {
+    	game.resetGame();
+        puntajePantalla.setText("0");
+        puntaje = 0;
+        actualizarTablero(); 
+        partidaFinalizada = false; 
+        partidaGanada = false; 
+        mensajeEnPantalla.setText("Mueva una tecla para iniciar la partida");
+        frame.requestFocus(); 
+    }
+    
     public boolean esPotenciaDeDos(int numero) {
         if (numero <= 0) {
             return false; 
@@ -300,6 +321,21 @@ public class Interfaz {
         }
         return true; 
     } 
+
+    private static boolean jugadorQuiereGuardarPuntuacion() {
+    	return TwoOptionsChooser.responderPreguntaLogica(
+    			"¿Quieres guardar tu puntuación en el marcador?");
+    }
+    
+    private static boolean jugadorQuiereSeguirLaPartida() {
+    	return TwoOptionsChooser.responderPreguntaLogica(
+    			"¿Quieres continuar la partida?");
+    }
+    
+    private static boolean jugadorQuiereJugarNuevaPartida() {
+    	return TwoOptionsChooser.responderPreguntaLogica(
+    			"¿Quieres jugar una nueva partida?");
+    }
 
     private String pedirNombre() {
     	return JOptionPane.showInputDialog(frame, "Ingrese su nombre para registrar su puntuación:");
