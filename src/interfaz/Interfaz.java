@@ -262,7 +262,7 @@ public class Interfaz {
                         else if (jugadorQuiereGuardarPuntuacion()) {
                         	registrarPuntaje();                        	
                         }
-                        if (jugadorJugarNuevaPartida()) {
+                        if (jugadorQuiereJugarNuevaPartida()) {
                         	reiniciarJuego();
                         } else {
                         	System.exit(0);
@@ -333,8 +333,7 @@ public class Interfaz {
     }
     
     private static boolean jugadorQuiereJugarNuevaPartida() {
-    	return TwoOptionsChooser.responderPreguntaLogica(
-    			"¿Quieres jugar una nueva partida?");
+    	return TwoOptionsChooser.responderPreguntaLogica("¿Quieres jugar una nueva partida?");
     }
 
     private String pedirNombre() {
