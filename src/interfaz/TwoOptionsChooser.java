@@ -1,16 +1,25 @@
 package interfaz;
 
+
 import java.awt.EventQueue;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 
-@SuppressWarnings("serial")
+/**
+ * {@code TwoOptionsChooser} es una clase con la que puedes
+ * obligar al usuario a elegir entre dos opciones dadas.
+ * <p>
+ * Esta clase despliega por pantalla un {@link JDialog}
+ * que detiene el flujo de ejecución hasta que se hayan elegido
+ * alguna de los dos opciones presentadas en botones.
+ */
 public class TwoOptionsChooser extends JDialog {
 
 	/**
 	 * Launch the application.
+	 * borrar luego
 	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -27,30 +36,50 @@ public class TwoOptionsChooser extends JDialog {
 		});
 	}
 
+	private static final long serialVersionUID = -738248705569194188L;
+
+	/**
+	 * Opción default TRUE
+	 */
 	private final static String YES = "Sí";
+	/**
+	 * Opción default FALSE
+	 */
 	private final static String NO = "No";
 
 	private boolean elegidaOpcion1;
 
 	/**
-	 * Create the application.
+	 * Crea un {@code TwoOptionsChooser} en base a la pregunta dada
+	 * y las dos posibles respuestas propuestas.
+	 * @param question pregunta que se le va a hacer al usuario
+	 * @param op1 primera opción posible
+	 * @param op2 segunda opción posible
 	 */
 	public TwoOptionsChooser(String question, String op1, String op2) {
 		initialize(question, op1, op2);
 		setVisible(true);
 	}
 
+	/**
+	 * Crea un {@code TwoOptionsChooser} en base a una preguntá lógica,
+	 * la cual se debe responder con SÍ o NO.
+	 * @param question pregunta que se le va a hacer al usuario
+	 */
 	public static TwoOptionsChooser preguntaLogica(String logicQuestion) {
 		return new TwoOptionsChooser(logicQuestion, YES, NO);
 	}
 
+	/**
+	 * Le hace al usuario una pregunta lógica que debe responder con SÍ o NO.
+	 * Este método devuelve un booleano de acuerdo de si eligió que SÍ.
+	 * @param preguntaLogica pregunta lógica que se le va a hacer al usuario
+	 * @return {@code true} si el usuario eligió que SI, {@code false} si eligió NO
+	 */
 	public static boolean responderPreguntaLogica(String preguntaLogica) {
 		return preguntaLogica(preguntaLogica).opcionElegida();
 	}
 
-	/**
-	 * Initialize the contents of the frame.
-	 */
 	private void initialize(String question, String op1, String op2) {
 
 		// Esto hace que el flujo de ejecución se detenga en el juego
@@ -90,9 +119,8 @@ public class TwoOptionsChooser extends JDialog {
 	}
 
 	/**
-	 * 
-	 * @return {@code true} si se eligió la opción 1 <br>
-	 * 		  {@code false} si se eligió la opción 2
+	 * @return {@code true} si el usuario eligió la primera opción,
+	 * {@code false} si eligió la segunda
 	 */
 	public boolean opcionElegida() {
 		return elegidaOpcion1;

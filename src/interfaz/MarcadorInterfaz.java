@@ -1,6 +1,5 @@
 package interfaz;
 
-
 import java.awt.EventQueue;
 import javax.swing.JFrame;
 
@@ -10,7 +9,17 @@ import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 import java.awt.Font;
 
+/**
+ * Esta clase es un {@link JFrame} representa un historial de puntajes,
+ * al cual se le pueden agregar registros, que de forma automática se 
+ * ordenan de mayor a menor y se insertan en el frame.
+ */
 public class MarcadorInterfaz extends JFrame {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6088765981757107546L;
 
 	private JLabel labelPuntuaciones;
 	private TreeSet<Registro> registros;
@@ -31,9 +40,6 @@ public class MarcadorInterfaz extends JFrame {
 		});
 	}
 
-	/**
-	 * Create the application.
-	 */
 	public MarcadorInterfaz() {
 		initialize();
 	}
@@ -57,32 +63,31 @@ public class MarcadorInterfaz extends JFrame {
 		});
 
 		getContentPane().setLayout(null);
-		
+
 		labelPuntuaciones = new JLabel("Aún no hay puntuaciones registradas.");
 		labelPuntuaciones.setVerticalAlignment(SwingConstants.TOP);
 		labelPuntuaciones.setBounds(10, 48, 401, 213);
 		getContentPane().add(labelPuntuaciones);
-		
+
 		JLabel marcadorTitulo = new JLabel("MARCADOR DE PUNTUACIONES");
 		marcadorTitulo.setFont(new Font("Tahoma", Font.BOLD, 16));
 		marcadorTitulo.setBounds(10, 11, 301, 18);
 		getContentPane().add(marcadorTitulo);
 	}
 
-	void registrarPuntacion(String nombre, int puntaje){
+	/**
+	 * Registra una nueva puntuación en el marcador
+	 * @param nombre nombre del usuario que registrá la puntuación
+	 * @param puntaje puntaje obtenido
+	 */
+	void registrarPuntacion(String nombre, int puntaje) {
 		Registro nuevoRegistro = new Registro(nombre, puntaje);
 		registros.add(nuevoRegistro);
 
 		StringBuilder sb = new StringBuilder();
 
-//		Si está ordenado de menor a mayor
-//		java.util.Iterator<Registro> iteratorRegistros = registros.descendingIterator();
-//		while (iteratorRegistros.hasNext())
-//			System.out.println(iteratorRegistros.next());
-
-//		Si está ordenado de mayor a menor
 		sb.append("<html>");
-		for (Registro r: registros) {
+		for (Registro r : registros) {
 			sb.append(r).append("<br>");
 			System.out.println(r);
 		}
