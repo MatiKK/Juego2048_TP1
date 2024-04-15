@@ -7,7 +7,7 @@ public class TableroFichas {
 	/**
 	 * Array bidimensional que representa un tablero
 	 */
-	private int[][] array2Dfichas;
+	private Ficha[][] array2Dfichas;
 
 	private Random randomGenerator;
 
@@ -78,9 +78,16 @@ public class TableroFichas {
 	 * @param fichasInicial cantidad de fichas con la que se comienzan
 	 */
 	public TableroFichas(int filas, int columnas, int valorGanador, int fichasInicial) {
-		randomGenerator = new Random();
+
 		alturaTablero = filas;
 		anchuraTablero = columnas;
+
+		array2Dfichas = new Ficha[alturaTablero][anchuraTablero];
+		for (int i = 0; i < alturaTablero; i++)
+			for (int j = 0; j < anchuraTablero; j++)
+				array2Dfichas[i][j] = new Ficha(0);
+
+		randomGenerator = new Random();
 		valorObjetivo = valorGanador;
 		cantidadFichasInicial = fichasInicial;
 		setUpInicial();
@@ -97,11 +104,13 @@ public class TableroFichas {
 	 * Configura la clase de modo que sea posible comenzar una partida
 	 */
 	private void setUpInicial() {
-		array2Dfichas = new int[alturaTablero][anchuraTablero];
 		terminoLaPartida = false;
 		seAlcanzoElValorObjetivo = false;
 		cantidadFichasActual = 0;
 		valorMasGrandeAlcanzado = 0;
+		for (int i = 0; i < alturaTablero; i++)
+			for (int j = 0; j < anchuraTablero; j++)
+				obtenerFicha(i,j).reestablecerValorACero();
 		agregarFichasRandom(cantidadFichasInicial);
 	}
 
@@ -127,8 +136,12 @@ public class TableroFichas {
 	 * @param columnacolumna donde está el valor que se busca
 	 * @return el valor que se encuentra en las "coordenadas" dadas
 	 */
-	public int obtenerFicha(int fila, int columna) {
+	public Ficha obtenerFicha(int fila, int columna) {
 		return array2Dfichas[fila][columna];
+	}
+
+	private int obtenerValorEnFicha(int fila, int columna) {
+		return obtenerFicha(fila,columna).obtenerValor();
 	}
 
 	/**
@@ -198,9 +211,9 @@ public class TableroFichas {
 				do {
 					row = randomGenerator.nextInt(alturaTablero);
 					col = randomGenerator.nextInt(anchuraTablero);
-				} while (obtenerFicha(row, col) != 0); // Busca una posición vacía
+				} while (obtenerValorEnFicha(row, col) != 0); // Busca una posición vacía
 				int value = randomGenerator.nextDouble() < 0.9 ? 2 : 4;
-				array2Dfichas[row][col] = value;
+				obtenerFicha(row,col).actualizarValor(value);
 				if (value > valorMasGrandeAlcanzado)
 					valorMasGrandeAlcanzado = value;
 				cantidadFichasActual++;
@@ -232,10 +245,10 @@ public class TableroFichas {
 		for (int i = 0; i < alturaTablero; i++) {
 			for (int j = 0; j < anchuraTablero - 1; j++) {
 				if (i < alturaTablero - 1)
-					if (obtenerFicha(i, j) == obtenerFicha(i + 1, j))
+					if (obtenerValorEnFicha(i, j) == obtenerValorEnFicha(i + 1, j))
 						return true;
 				if (j < anchuraTablero - 1)
-					if (obtenerFicha(i, j) == obtenerFicha(i, j + 1))
+					if (obtenerValorEnFicha(i, j) == obtenerValorEnFicha(i, j + 1))
 						return true;
 			}
 		}
@@ -314,22 +327,24 @@ public class TableroFichas {
 		for (int col = 0; col < anchuraTablero; col++) {
 			// Combinar y mover las fichas hacia arriba en la columna actual
 			for (int row = 1; row < alturaTablero; row++) {
-				if (obtenerFicha(row, col) != 0) {
-
+				if (obtenerValorEnFicha(row, col) != 0) {
 					// Combinar fichas si es posible
 					for (int k = row - 1; k >= 0; k--) {
-						if (obtenerFicha(k, col) == 0) {// TENGO LUGAR ARRIBA
+						Ficha fichaActual = obtenerFicha(k,col);
+						Ficha fichaSiguiente = obtenerFicha(k+1,col);
+						if (fichaActual.obtenerValor() == 0) {// TENGO LUGAR ARRIBA
 							// Mover la ficha hacia arriba
-							array2Dfichas[k][col] = obtenerFicha(k + 1, col);
-							array2Dfichas[k + 1][col] = 0;
-						} else if (obtenerFicha(k, col) == obtenerFicha(k + 1, col)) {
+							fichaActual.intercambiarValores(fichaSiguiente);
+							fichaSiguiente.reestablecerValorACero();
+						} else if (fichaActual.compartenValor(fichaSiguiente)) {
 							// Combinar fichas
-							array2Dfichas[k][col] *= 2;
-							array2Dfichas[k + 1][col] = 0;
-							puntaje += obtenerFicha(k, col);
+							fichaActual.duplicarValor();
+							fichaSiguiente.reestablecerValorACero();
+							int aux = fichaActual.obtenerValor();
+							puntaje += aux;
 							cantidadFichasActual--;
-							valorMasGrandeAlcanzado = obtenerFicha(k, col);
-							chequearSiEsElValorObjetivo(obtenerFicha(k, col));
+							valorMasGrandeAlcanzado = aux;
+							chequearSiEsElValorObjetivo(aux);
 							// System.out.println("obteniendo valor: " + tablero[k][col]);
 							break;
 						} else {
@@ -355,26 +370,30 @@ public class TableroFichas {
 		for (int col = 0; col < anchuraTablero; col++) {
 			// Combinar y mover las fichas hacia abajo en la columna actual
 			for (int row = alturaTablero - 2; row >= 0; row--) {
-				if (array2Dfichas[row][col] != 0) {
+				if (obtenerValorEnFicha(row, col) != 0) {
 					// Combinar fichas si es posible
 					for (int k = row + 1; k < alturaTablero; k++) {
-						if (obtenerFicha(k, col) == 0) { // ABAJO ESTA VACIA
-							// Mover la ficha hacia abajo
-							array2Dfichas[k][col] = obtenerFicha(k - 1, col);
-							array2Dfichas[k - 1][col] = 0;
-						} else if (obtenerFicha(k, col) == obtenerFicha(k - 1, col)) {
-							// Combinar fichas
-							array2Dfichas[k][col] *= 2;
-							array2Dfichas[k - 1][col] = 0;
-							puntaje += obtenerFicha(k, col);
+
+						Ficha fichaActual = obtenerFicha(k,col);
+						Ficha fichaSiguiente = obtenerFicha(k-1,col);
+
+						if (fichaActual.obtenerValor() == 0) {
+							fichaActual.intercambiarValores(fichaSiguiente);
+							fichaSiguiente.reestablecerValorACero();
+						
+						} else if (fichaActual.compartenValor(fichaSiguiente)) {
+							fichaActual.duplicarValor();
+							fichaSiguiente.reestablecerValorACero();
+							int aux = fichaActual.obtenerValor();
+							puntaje += aux;
 							cantidadFichasActual--;
-							valorMasGrandeAlcanzado = obtenerFicha(k, col);
-							chequearSiEsElValorObjetivo(obtenerFicha(k, col));
+							valorMasGrandeAlcanzado = aux;
+							chequearSiEsElValorObjetivo(aux);
 							break;
 						} else {
-							// No se puede combinar, salir del bucle
 							break;
 						}
+
 					}
 				}
 			}
@@ -394,26 +413,31 @@ public class TableroFichas {
 		for (int row = 0; row < alturaTablero; row++) {
 			// Combinar y mover las fichas hacia la izquierda en la fila actual
 			for (int col = 1; col < anchuraTablero; col++) {
-				if (obtenerFicha(row, col) != 0) {
+				if (obtenerValorEnFicha(row, col) != 0) {
 					// Combinar fichas si es posible
 					for (int k = col - 1; k >= 0; k--) {
-						if (obtenerFicha(row, k) == 0) {// EL LUGAR IZQUIERDO ESTA VACIO
-							// Mover la ficha hacia la izquierda
-							array2Dfichas[row][k] = obtenerFicha(row, k + 1);
-							array2Dfichas[row][k + 1] = 0;
-						} else if (obtenerFicha(row, k) == obtenerFicha(row, k + 1)) {
+						Ficha fichaActual = obtenerFicha(row,k);
+						Ficha fichaSiguiente = obtenerFicha(row, k + 1);
+						if (fichaActual.obtenerValor() == 0) {// TENGO LUGAR izquierda
+							// Mover la ficha hacia izquierda
+							fichaActual.intercambiarValores(fichaSiguiente);
+							fichaSiguiente.reestablecerValorACero();
+						} else if (fichaActual.compartenValor(fichaSiguiente)) {
 							// Combinar fichas
-							array2Dfichas[row][k] *= 2;
-							array2Dfichas[row][k + 1] = 0;
-							puntaje += obtenerFicha(row, k);
+							fichaActual.duplicarValor();
+							fichaSiguiente.reestablecerValorACero();
+							int aux = fichaActual.obtenerValor();
+							puntaje += aux;
 							cantidadFichasActual--;
-							valorMasGrandeAlcanzado = obtenerFicha(row, k);
-							chequearSiEsElValorObjetivo(obtenerFicha(row, k));
+							valorMasGrandeAlcanzado = aux;
+							chequearSiEsElValorObjetivo(aux);
+							// System.out.println("obteniendo valor: " + tablero[k][col]);
 							break;
 						} else {
 							// No se puede combinar, salir del bucle
 							break;
 						}
+
 					}
 				}
 			}
@@ -433,26 +457,31 @@ public class TableroFichas {
 		for (int row = 0; row < alturaTablero; row++) {
 			// Combinar y mover las fichas hacia la derecha en la fila actual
 			for (int col = anchuraTablero - 2; col >= 0; col--) {
-				if (obtenerFicha(row, col) != 0) {
+				if (obtenerValorEnFicha(row, col) != 0) {
 					// Combinar fichas si es posible
 					for (int k = col + 1; k < anchuraTablero; k++) {
-						if (obtenerFicha(row, k) == 0) {// Ficha de la derecha vacia
-							// Mover la ficha hacia la derecha
-							array2Dfichas[row][k] = obtenerFicha(row, k - 1);
-							array2Dfichas[row][k - 1] = 0;
-						} else if (obtenerFicha(row, k) == obtenerFicha(row, k - 1)) {
+						Ficha fichaActual = obtenerFicha(row,k);
+						Ficha fichaSiguiente = obtenerFicha(row, k - 1);
+						if (fichaActual.obtenerValor() == 0) {// TENGO LUGAR derecha
+							// Mover la ficha hacia derecha
+							fichaActual.intercambiarValores(fichaSiguiente);
+							fichaSiguiente.reestablecerValorACero();
+						} else if (fichaActual.compartenValor(fichaSiguiente)) {
 							// Combinar fichas
-							array2Dfichas[row][k] *= 2;
-							array2Dfichas[row][k - 1] = 0;
-							puntaje += obtenerFicha(row, k);
+							fichaActual.duplicarValor();
+							fichaSiguiente.reestablecerValorACero();
+							int aux = fichaActual.obtenerValor();
+							puntaje += aux;
 							cantidadFichasActual--;
-							valorMasGrandeAlcanzado = obtenerFicha(row, k);
-							chequearSiEsElValorObjetivo(obtenerFicha(row, k));
+							valorMasGrandeAlcanzado = aux;
+							chequearSiEsElValorObjetivo(aux);
+							// System.out.println("obteniendo valor: " + tablero[k][col]);
 							break;
 						} else {
 							// No se puede combinar, salir del bucle
 							break;
 						}
+
 					}
 				}
 			}
@@ -483,7 +512,7 @@ public class TableroFichas {
 		return terminoLaPartida;
 	}
 
-	public int[][] obtenerTablero() {
+	public Ficha[][] obtenerTablero() {
 		return array2Dfichas;
 	}
 

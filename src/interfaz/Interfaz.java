@@ -18,7 +18,7 @@ public class Interfaz {
 	private JFrame frame;
 	private TableroFichas tableroInternoDelJuego;
 	private MarcadorInterfaz frameMarcador;
-	private JLabel[][] array2Dfichas;
+	private LabelFicha[][] array2Dfichas;
 	private int puntajeActualDelJugador;
 	private JLabel labelPuntaje;
 	private JLabel labelEstadoDeJuego;
@@ -96,10 +96,10 @@ public class Interfaz {
 		panelContenedorDeLasFichas.setLayout(new GridLayout(altura_tablero, anchura_tablero, 5, 5));
 		frame.getContentPane().add(panelContenedorDeLasFichas);
 
-		array2Dfichas = new JLabel[altura_tablero][anchura_tablero];
+		array2Dfichas = new LabelFicha[altura_tablero][anchura_tablero];
 		for (int i = 0; i < altura_tablero; i++) {
 			for (int j = 0; j < anchura_tablero; j++) {
-				array2Dfichas[i][j] = new JLabel();
+				array2Dfichas[i][j] = new LabelFicha(tableroInternoDelJuego.obtenerFicha(i, j));
 				array2Dfichas[i][j].setOpaque(true);
 				array2Dfichas[i][j].setHorizontalAlignment(SwingConstants.CENTER); // Centrar texto
 				array2Dfichas[i][j].setFont(new Font("Arial", Font.BOLD, 28)); // Tamaño de la fuente
@@ -172,7 +172,7 @@ public class Interfaz {
 		JButton botonSugerirJugada = new JButton("Sugerir jugada");
 		botonSugerirJugada.setBounds(170, 458, 124, 30);
 		botonSugerirJugada.addActionListener(e -> {
-			recomendarJugada(tableroInternoDelJuego.obtenerTablero());
+			recomendarJugada(array2Dfichas);
 			frame.requestFocus();
 		});
 		frame.getContentPane().add(botonSugerirJugada);
@@ -216,7 +216,7 @@ public class Interfaz {
 						actualizarPuntajeEnPantalla();
 					}
 
-					resetearSugerencia();// limpio la sugerencia en caso de que exista
+					desmarcarSugerencias();// limpio la sugerencia en caso de que exista
 					actualizarTablero(); // Actualizar tablero después de mover
 
 					// Verificar si el jugador ha ganado después del movimiento
@@ -418,10 +418,7 @@ public class Interfaz {
 	private void actualizarTablero() {
 		for (int i = 0; i < array2Dfichas.length; i++) {
 			for (int j = 0; j < array2Dfichas[i].length; j++) {
-				int valor = tableroInternoDelJuego.obtenerFicha(i, j);
-				JLabel ficha = array2Dfichas[i][j];
-				ficha.setText(valor == 0 ? null : String.valueOf(valor));
-				pintarFichaSegunValor(ficha, valor);
+				array2Dfichas[i][j].chequearValores();
 			}
 		}
 	}
@@ -429,45 +426,9 @@ public class Interfaz {
 	/**
 	 * Color del marco del juego (tablero de fichas)
 	 */
-	private static final Color COLOR_MARCO = new Color(173, 159, 148);
+	private static final Color COLOR_MARCO = Constantes2048.COLOR_MARCO;
 
-	/**
-	 * Colores de fichas de acuerdo al valor. Su índice es equivalente a log2(valor)
-	 * <p>
-	 * Ej. {@code COLORES_SEGUN_VALOR[3]} es el color del bloque 2<sup>3</sup> (no
-	 * aplica para íncide 0 y valores > 2048, son casos aparte)
-	 */
-	private static Color[] COLORES_SEGUN_VALOR = { new Color(192, 178, 165), // vacío 0
-			new Color(238, 228, 218), // 2
-			new Color(237, 224, 200), // 4
-			new Color(242, 177, 121), // 8
-			new Color(245, 149, 99), // 16
-			new Color(246, 124, 95), // 32
-			new Color(246, 94, 59), // 64
-			new Color(237, 207, 114), // 128
-			new Color(237, 204, 97), // 256
-			new Color(237, 200, 80), // 512
-			new Color(237, 197, 63), // 1024
-			new Color(237, 194, 46), // 2048
-			new Color(60, 58, 50) // mayor a 2048
-	};
-
-	/**
-	 * Establece el color de la ficha de acuerdo a su valor
-	 * 
-	 * @param ficha ficha la cual pintar
-	 * @param valor valor con el cual decidir de qué color pintar la ficha
-	 */
-	private void pintarFichaSegunValor(JLabel ficha, int valor) {
-		// Tomar log2(valor)
-		int log2valor = valor == 0 ? 0 : (int) (Math.log10(valor) / Math.log10(2));
-
-		ficha.setBackground(COLORES_SEGUN_VALOR[log2valor < 13 ? log2valor : 12]);
-		ficha.setForeground(valor < 8 ? Color.BLACK : Color.WHITE);
-	}
-
-	private void recomendarJugada(int[][] tablero) {
-		resetearColores();
+	private void recomendarJugada(LabelFicha[][] tablero) {
 		int combinacionesHorizontales = contarCombinacionesHorizontales(tablero);
 		int combinacionesVerticales = contarCombinacionesVerticales(tablero);
 
@@ -491,16 +452,16 @@ public class Interfaz {
 		}
 	}
 
-	private int contarCombinacionesHorizontales(int[][] tablero) {
+	private int contarCombinacionesHorizontales(LabelFicha[][] tablero) {
 		int combinaciones = 0;
 		for (int i = 0; i < tablero.length; i++) {
 			for (int j = 0; j < tablero[i].length; j++) {
-				if (tablero[i][j] != 0) {
+				if (tablero[i][j].valorDeFicha() != 0) {
 					int col = j - 1;
-					while (col >= 0 && tablero[i][col] == 0) {
+					while (col >= 0 && tablero[i][col].valorDeFicha() == 0) {
 						col--;
 					}
-					if (col >= 0 && tablero[i][col] == tablero[i][j]) {
+					if (col >= 0 && tablero[i][col].valorDeFicha() == tablero[i][j].valorDeFicha()) {
 						combinaciones++;
 					}
 				}
@@ -509,16 +470,16 @@ public class Interfaz {
 		return combinaciones;
 	}
 
-	private int contarCombinacionesVerticales(int[][] tablero) {
+	private int contarCombinacionesVerticales(LabelFicha[][] tablero) {
 		int combinaciones = 0;
 		for (int j = 0; j < tablero[0].length; j++) {
 			for (int i = 0; i < tablero.length; i++) {
-				if (tablero[i][j] != 0) {
+				if (tablero[i][j].valorDeFicha() != 0) {
 					int row = i - 1;
-					while (row >= 0 && tablero[row][j] == 0) {
+					while (row >= 0 && tablero[row][j].valorDeFicha() == 0) {
 						row--;
 					}
-					if (row >= 0 && tablero[row][j] == tablero[i][j]) {
+					if (row >= 0 && tablero[row][j].valorDeFicha() == tablero[i][j].valorDeFicha()) {
 						combinaciones++;
 					}
 				}
@@ -527,15 +488,15 @@ public class Interfaz {
 		return combinaciones;
 	}
 
-	private void ejecutarCombinacionesHorizontales(int[][] tablero) {
+	private void ejecutarCombinacionesHorizontales(LabelFicha[][] tablero) {
 		for (int i = 0; i < tablero.length; i++) {
 			for (int j = 0; j < tablero[i].length; j++) {
-				if (tablero[i][j] != 0) {
+				if (tablero[i][j].valorDeFicha() != 0) {
 					int col = j - 1;
-					while (col >= 0 && tablero[i][col] == 0) {
+					while (col >= 0 && tablero[i][col].valorDeFicha() == 0) {
 						col--;
 					}
-					if (col >= 0 && tablero[i][col] == tablero[i][j]) {
+					if (col >= 0 && tablero[i][col].valorDeFicha() == tablero[i][j].valorDeFicha()) {
 						marcarCombinacionHorizontal(tablero, i, col, j);
 						return;
 					}
@@ -544,15 +505,15 @@ public class Interfaz {
 		}
 	}
 
-	private void ejecutarCombinacionesVerticales(int[][] tablero) {
+	private void ejecutarCombinacionesVerticales(LabelFicha[][] tablero) {
 		for (int j = 0; j < tablero[0].length; j++) {
 			for (int i = 0; i < tablero.length; i++) {
-				if (tablero[i][j] != 0) {
+				if (tablero[i][j].valorDeFicha() != 0) {
 					int row = i - 1;
-					while (row >= 0 && tablero[row][j] == 0) {
+					while (row >= 0 && tablero[row][j].valorDeFicha() == 0) {
 						row--;
 					}
-					if (row >= 0 && tablero[row][j] == tablero[i][j]) {
+					if (row >= 0 && tablero[row][j].valorDeFicha() == tablero[i][j].valorDeFicha()) {
 						marcarCombinacionVertical(tablero, row, j, i);
 						return;
 					}
@@ -561,43 +522,33 @@ public class Interfaz {
 		}
 	}
 
-	private void marcarCombinacionHorizontal(int[][] tablero, int row, int startCol, int endCol) {
-		int value = tablero[row][startCol];
+	private void marcarCombinacionHorizontal(LabelFicha[][] tablero, int row, int startCol, int endCol) {
+		LabelFicha value = tablero[row][startCol];
 		for (int col = startCol; col <= endCol; col++) {
-			if (tablero[row][col] == value) {
+			if (tablero[row][col].valorDeFicha() == value.valorDeFicha()) {
 				marcarCelda(row, col);
 			}
 		}
 	}
 
-	private void marcarCombinacionVertical(int[][] tablero, int startRow, int col, int endRow) {
-		int value = tablero[startRow][col];
+	private void marcarCombinacionVertical(LabelFicha[][] tablero, int startRow, int col, int endRow) {
+		LabelFicha value = tablero[startRow][col];
 		for (int row = startRow; row <= endRow; row++) {
-			if (tablero[row][col] == value) {
+			if (tablero[row][col].valorDeFicha() == value.valorDeFicha()) {
 				marcarCelda(row, col);
 			}
 		}
 	}
 
 	private void marcarCelda(int row, int col) {
-		array2Dfichas[row][col].setBorder(new LineBorder(Color.RED));
-		actualizarTablero();
-		// array2Dfichas[row][col].setBackground(Color.RED);
-
+		array2Dfichas[row][col].marcarComoSugerencia();
 	}
 
-	private void resetearColores() {
-		for (JLabel[] row : array2Dfichas) {
-			for (JLabel label : row) {
-				label.setBackground(COLOR_MARCO);
-			}
-		}
-	}
-
-	private void resetearSugerencia() {
-		for (JLabel[] row : array2Dfichas) {
-			for (JLabel label : row) {
-				label.setBorder(new LineBorder(COLOR_MARCO));
+	private void desmarcarSugerencias() {
+		for (LabelFicha[] row : array2Dfichas) {
+			for (LabelFicha ficha: row) {
+				if (ficha.esSugerencia())
+					ficha.desmarcarComoSugerencia();
 			}
 		}
 	}
