@@ -23,6 +23,7 @@ public class MarcadorInterfaz extends JFrame {
 
 	private JLabel labelPuntuaciones;
 	private TreeSet<Registro> registros;
+	private JFrame parent;
 
 	/**
 	 * Launch the application.
@@ -31,7 +32,7 @@ public class MarcadorInterfaz extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					MarcadorInterfaz window = new MarcadorInterfaz();
+					MarcadorInterfaz window = new MarcadorInterfaz(null);
 					window.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -40,11 +41,22 @@ public class MarcadorInterfaz extends JFrame {
 		});
 	}
 
-	public MarcadorInterfaz() {
+	public MarcadorInterfaz(JFrame parentComponent) {
+		parent = parentComponent;
 		initialize();
 	}
 
 	public void mostrarEnPantalla() {
+		int anchoMarcador = 450;
+		int altoMarcador = 300;
+
+		int x = parent == null ? 100 :
+			parent.getX() + parent.getWidth() / 2 - anchoMarcador / 2;
+		int y = parent == null ? 100 :
+			parent.getY() + parent.getHeight() / 2 - altoMarcador / 2;
+		setBounds(
+				x, y, anchoMarcador, altoMarcador);
+
 		setVisible(true);
 	}
 
@@ -52,7 +64,7 @@ public class MarcadorInterfaz extends JFrame {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-		setBounds(100, 100, 450, 300);
+
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setVisible(false);
 
@@ -89,7 +101,6 @@ public class MarcadorInterfaz extends JFrame {
 		sb.append("<html>");
 		for (Registro r : registros) {
 			sb.append(r).append("<br>");
-			System.out.println(r);
 		}
 		sb.append("</html>");
 		labelPuntuaciones.setText(sb.toString());

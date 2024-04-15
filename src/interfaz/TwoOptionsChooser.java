@@ -4,6 +4,7 @@ package interfaz;
 import java.awt.EventQueue;
 import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 
@@ -21,14 +22,14 @@ public class TwoOptionsChooser extends JDialog {
 	 * Launch the application.
 	 * borrar luego
 	 */
-	public static void main(String[] args) {
+	public static void mainasd(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				// Test
 				String qu = "Elige una de las opciones";
 				String o1 = "Opción 1";
 				String o2 = "Opción 2";
-				TwoOptionsChooser window = new TwoOptionsChooser(qu, o1, o2);
+				TwoOptionsChooser window = new TwoOptionsChooser(null, qu, o1, o2);
 
 				boolean x = window.opcionElegida();
 				System.out.println("Elegiste " + ((x) ? o1 : o2));
@@ -49,6 +50,8 @@ public class TwoOptionsChooser extends JDialog {
 
 	private boolean elegidaOpcion1;
 
+	private JFrame parent;
+
 	/**
 	 * Crea un {@code TwoOptionsChooser} en base a la pregunta dada
 	 * y las dos posibles respuestas propuestas.
@@ -56,9 +59,13 @@ public class TwoOptionsChooser extends JDialog {
 	 * @param op1 primera opción posible
 	 * @param op2 segunda opción posible
 	 */
-	public TwoOptionsChooser(String question, String op1, String op2) {
+	public TwoOptionsChooser(JFrame parentComponent,
+			String question, String op1, String op2) {
+		super(parentComponent);
+		parent = parentComponent;
 		initialize(question, op1, op2);
 		setVisible(true);
+		
 	}
 
 	/**
@@ -66,8 +73,9 @@ public class TwoOptionsChooser extends JDialog {
 	 * la cual se debe responder con SÍ o NO.
 	 * @param question pregunta que se le va a hacer al usuario
 	 */
-	public static TwoOptionsChooser preguntaLogica(String logicQuestion) {
-		return new TwoOptionsChooser(logicQuestion, YES, NO);
+	public static TwoOptionsChooser preguntaLogica(JFrame parentComponent,
+			String logicQuestion) {
+		return new TwoOptionsChooser(parentComponent, logicQuestion, YES, NO);
 	}
 
 	/**
@@ -76,11 +84,22 @@ public class TwoOptionsChooser extends JDialog {
 	 * @param preguntaLogica pregunta lógica que se le va a hacer al usuario
 	 * @return {@code true} si el usuario eligió que SI, {@code false} si eligió NO
 	 */
-	public static boolean responderPreguntaLogica(String preguntaLogica) {
-		return preguntaLogica(preguntaLogica).opcionElegida();
+	public static boolean responderPreguntaLogica(JFrame parentComponent,
+			String preguntaLogica) {
+		return preguntaLogica(parentComponent, preguntaLogica).opcionElegida();
 	}
 
 	private void initialize(String question, String op1, String op2) {
+
+		int anchoJDialog = 300;
+		int altoJDialog = 150;
+
+		int x = parent == null ? 100 :
+			parent.getX() + parent.getWidth() / 2 - anchoJDialog / 2;
+		int y = parent == null ? 100 :
+			parent.getY() + parent.getHeight() / 2 - altoJDialog / 2;
+		setBounds(
+				x, y, anchoJDialog, altoJDialog);
 
 		// Esto hace que el flujo de ejecución se detenga en el juego
 		// y no siga hasta que se elija una opción
@@ -90,7 +109,6 @@ public class TwoOptionsChooser extends JDialog {
 		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 		elegidaOpcion1 = false;
 
-		setBounds(100, 100, 300, 150);
 		getContentPane().setLayout(null);
 
 		// Mostrar pregunta

@@ -61,7 +61,14 @@ public class Interfaz {
 		// JFRAME PRINCIPAL
 		frame = new JFrame();
 		frame.getContentPane().setBackground(new Color(251, 230, 198));
-		frame.setBounds(100, 100, 500, 650);
+		int anchoFrame = 500;
+		int altoFrame = 650;
+		frame.setBounds(
+				(PantallaUtils.anchoPantalla - anchoFrame) / 2,
+				(PantallaUtils.altoPantalla - altoFrame) / 2,
+				anchoFrame,
+				altoFrame);
+
 		frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		frame.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
@@ -72,7 +79,7 @@ public class Interfaz {
 		frame.getContentPane().setLayout(null);
 
 		// JFRAME MARCADOR
-		frameMarcador = new MarcadorInterfaz();
+		frameMarcador = new MarcadorInterfaz(frame);
 		frameMarcador.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
 				frameMarcador.setVisible(false); // Oculta el frame en lugar de cerrarlo
@@ -327,8 +334,8 @@ public class Interfaz {
 	 * @return {@code true} si el usuario desea guardar su puntuación alcanzada en
 	 *         el marcador
 	 */
-	private static boolean jugadorQuiereGuardarPuntuacion() {
-		return TwoOptionsChooser.responderPreguntaLogica("¿Quieres registrar tu puntuación?");
+	private boolean jugadorQuiereGuardarPuntuacion() {
+		return TwoOptionsChooser.responderPreguntaLogica(frame, "¿Quieres registrar tu puntuación?");
 	}
 
 	/**
@@ -338,8 +345,8 @@ public class Interfaz {
 	 * 
 	 * @return {@code true} si el usuario desea continuar la partida
 	 */
-	private static boolean jugadorQuiereSeguirLaPartida() {
-		return TwoOptionsChooser.responderPreguntaLogica("¿Quieres continuar la partida?");
+	private boolean jugadorQuiereSeguirLaPartida() {
+		return TwoOptionsChooser.responderPreguntaLogica(frame, "¿Quieres continuar la partida?");
 	}
 
 	/**
@@ -348,8 +355,8 @@ public class Interfaz {
 	 * 
 	 * @return {@code true} si el usuario desea comenzar una nueva partida
 	 */
-	private static boolean jugadorQuiereJugarNuevaPartida() {
-		return TwoOptionsChooser.responderPreguntaLogica("¿Quieres jugar una nueva partida?");
+	private boolean jugadorQuiereJugarNuevaPartida() {
+		return TwoOptionsChooser.responderPreguntaLogica(frame, "¿Quieres jugar una nueva partida?");
 	}
 
 	/**
@@ -358,8 +365,8 @@ public class Interfaz {
 	 * 
 	 * @return {@code true} si el usuario desea salir del juego
 	 */
-	private static boolean jugadorQuiereSalirDelJuego() {
-		return TwoOptionsChooser.responderPreguntaLogica("¿Seguro quieres salir del juego?");
+	private boolean jugadorQuiereSalirDelJuego() {
+		return TwoOptionsChooser.responderPreguntaLogica(frame, "¿Seguro quieres salir del juego?");
 	}
 
 	/**
