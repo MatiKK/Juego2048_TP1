@@ -384,6 +384,9 @@ public class Interfaz {
 
 		while (!numeroValido) {
 			input = JOptionPane.showInputDialog(frame, "Ingrese el número que se deberá alcanzar.");
+			
+			// Se presionó cancelar, no hacer nada
+			if (input == null) return;
 
 			try {
 				numero = Integer.parseInt(input);
